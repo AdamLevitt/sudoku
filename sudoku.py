@@ -1,4 +1,7 @@
 import numpy as np
+import queue
+
+q = queue.Queue()
 
 
 def box_display(puzzle, row, col):
@@ -12,6 +15,8 @@ def box_display(puzzle, row, col):
 
 
 def box_display_range(row, col):
+    """Show the max/min ranges of a cell's containing 3x3 square"""
+
     col_ref = col // 3
     row_ref = row // 3
 
@@ -113,30 +118,59 @@ def forward_pass(puzzle):
 
 
 def sudoku(puzzle):
-    """return the solved puzzle as a 2d array of 9 x 9"""
+    """return the solved puzzle as a 2d array of 9x9"""
 
     arr = np.array(puzzle)
     arr_current = np.copy(arr)
+    back_t = []
 
+    # Set running condition for loop
     if 0 in arr:
         run = True
     else:
         run = False
-        # TODO: poss ={[],[]}
+        arr_temp = np.copy(arr)
 
+    # main loop
     while run:
-        print("run")
+        # forward pass through puzzle to receive updated sudoku and dictionary of potential numbers at each position
         arr_temp, poss = forward_pass(arr_current)
+
+        # test - is the updated Sudoku equal the previous version
         test = np.array_equal(arr_temp, arr_current)
 
+        # Solution achieved scenario
         if test and 0 not in arr_temp:
             run = False
+            print("Solution Achieved!!!")
 
+        # Puzzle has not improved scenario (backtracking)
         elif test:
-            print("Not improving")
-            print(poss)
-            run = False
 
+            # if queue is empty - store copy of recent sudoku, find key that is not solved and put values in queue
+            if q.empty():
+                store = np.copy(arr_temp)
+
+                for row in range(9):
+                    for col in range(9):
+                        key = str(row) + str(col)
+
+                        if len(poss[key]) != 1 and key not in back_t:
+                            back_t.append(key)
+                            row_test = int(key[0])
+                            col_test = int(key[1])
+                            for val in poss[key]:
+                                q.put(val)
+                            break
+                    break
+
+            # When queue is not empty - revert to stored sudoku, get next value and assign to sudoku at key location, retest
+            arr_temp = np.copy(store)
+            temp_num = q.get()
+            arr_temp[row_test, col_test] = temp_num
+            arr_current = np.copy(arr_temp)
+
+        # Puzzle did improve scenario
         else:
             arr_current = np.copy(arr_temp)
 
@@ -148,7 +182,7 @@ def print_sudoku(array):
 
     print("SUDOKU TABLE")
     for row in range(9):
-        print("".join(str(array[row][col]) + " " for col in range(9)))
+        print("".join(str(array[row][col]) + "  " for col in range(9)))
 
 
 if __name__ == "__main__":
