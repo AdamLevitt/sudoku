@@ -32,8 +32,7 @@ def bf_soup(take):
 
     return puzzle_get
 
-
-if __name__ == "__main__":
+def main():
     response = request_sudoku()
 
     #Store response in file using context manager
@@ -44,5 +43,10 @@ if __name__ == "__main__":
     with open("web_response.html", "r") as file:
         soup = BeautifulSoup(file.read(), "lxml")
 
+    return soup
+
+
+if __name__ == "__main__":
+    soup = main()
     puzzle = bf_soup(soup)
     print(puzzle)
