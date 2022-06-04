@@ -60,6 +60,9 @@ def forward_pass(puzzle, count):
 
     count += 1
 
+    if 0 not in arr_temp:
+        return (arr_temp, poss, count)
+
     # Compare possibilities at row level
     for row in range(9):
         row_poss = []
@@ -79,6 +82,9 @@ def forward_pass(puzzle, count):
 
     count += 1
 
+    if 0 not in arr_temp:
+        return (arr_temp, poss, count)
+
     # Compare possibilities at column level
     for col in range(9):
         col_poss = []
@@ -97,6 +103,9 @@ def forward_pass(puzzle, count):
                     arr_temp[int(key[0]), int(key[1])] = poss[key][0]
 
     count += 1
+
+    if 0 not in arr_temp:
+        return (arr_temp, poss, count)
 
     # Compare possibilities at box level
     for row in range(0, 9, 3):
@@ -220,7 +229,7 @@ if __name__ == "__main__":
         [0, 0, 0, 0, 0, 0, 5, 0, 4],
     ]
 
-    test = sudoku(easy)
+    test = sudoku(hard)
     print_sudoku(test[0])
     print()
     print(f"The Number of iterations: {test[1]}")
