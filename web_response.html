@@ -1,0 +1,370 @@
+<!DOCTYPE HTML>
+<html lang="en-US" dir="ltr"  data-config='{"twitter":0,"plusone":0,"facebook":0,"style":"default"}'>
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sudoku Generator </title>
+<link rel="shortcut icon" href="/wp-content/themes/yoo_capture_wp/favicon.ico">
+<link rel="apple-touch-icon-precomposed" href="/wp-content/themes/yoo_capture_wp/apple_touch_icon.png">
+<meta name='robots' content='max-image-preview:large' />
+<link rel='dns-prefetch' href='//ajax.googleapis.com' />
+<link rel='stylesheet' id='wp-block-library-css'  href='https://www.sudokuweb.org/wp-includes/css/dist/block-library/style.min.css?ver=5.8.4' type='text/css' media='all' />
+<link rel='stylesheet' id='my_stylesheet-css'  href='https://www.sudokuweb.org/wp-content/plugins/sudoku-word-press/sudokugame.css?ver=5.8.4' type='text/css' media='all' />
+<link rel='stylesheet' id='qts_front_styles-css'  href='https://www.sudokuweb.org/wp-content/plugins/qtranslate-slug/assets/css/qts-default.css?ver=5.8.4' type='text/css' media='all' />
+<script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js' id='jquery-js'></script>
+<link rel="canonical" href="https://www.sudokuweb.org/" />
+<link rel='shortlink' href='https://www.sudokuweb.org/' />
+<link rel="alternate" type="application/json+oembed" href="https://www.sudokuweb.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.sudokuweb.org%2F" />
+<link rel="alternate" type="text/xml+oembed" href="https://www.sudokuweb.org/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fwww.sudokuweb.org%2F&#038;format=xml" />
+<meta name="description" content="Sudoku 9x9, 6x6, 4x4 generator creates sudoku online in three different levels : Simple sudoku's for beginners to difficult puzzles for experts." />
+<link hreflang="x-default" href="https://www.sudokuweb.org" rel="alternate" />
+<link hreflang="en" href="https://www.sudokuweb.org" rel="alternate" />
+<link hreflang="nl" href="https://www.sudokuweb.org/nl" rel="alternate" />
+<link hreflang="de" href="https://www.sudokuweb.org/de" rel="alternate" />
+<link hreflang="es" href="https://www.sudokuweb.org/es" rel="alternate" />
+<link hreflang="fr" href="https://www.sudokuweb.org/fr" rel="alternate" />
+<link hreflang="cs" href="https://www.sudokuweb.org/cs" rel="alternate" />
+<link hreflang="sk" href="https://www.sudokuweb.org/sk" rel="alternate" />
+<link hreflang="pl" href="https://www.sudokuweb.org/pl" rel="alternate" />
+<link hreflang="ru" href="https://www.sudokuweb.org/ru" rel="alternate" />
+<style type="text/css">.broken_link, a.broken_link {
+	text-decoration: line-through;
+}</style><link rel="stylesheet" href="/wp-content/themes/yoo_capture_wp/cache/gzip.php?theme-5c0efbb0.css">
+<script src="/wp-content/themes/yoo_capture_wp/cache/gzip.php?theme-784cca8b.js"></script>
+</head>
+
+<body data-rsssl=1 class="home page-template-default page page-id-14 tm-isblog wp-front_page wp-page wp-page-14 en">
+
+		
+				<div class="tm-block tm-headerbar uk-clearfix ">
+			<div class="uk-container uk-container-center">
+
+								<a class="uk-navbar-brand uk-hidden-small" href="https://www.sudokuweb.org"><div class="custom-logo"></div></a>
+				
+				
+				
+								<div class="uk-navbar-flip uk-hidden-small">
+					<ul class="uk-navbar-nav uk-hidden-small"><li class="uk-active" data-uk-dropdown="{}"><a href="https://www.sudokuweb.org/">Sudoku Generator</a></li><li data-uk-dropdown="{}"><a href="https://www.sudokuweb.org/easy-sudoku-4x4-for-kids/">Sudoku 4×4</a></li><li data-uk-dropdown="{}"><a href="https://www.sudokuweb.org/easy-sudoku-6x6-for-kids/">Sudoku 6×6</a></li><li data-uk-dropdown="{}"><a href="https://www.sudokuweb.org/word-search-puzzle/">Word Search</a></li></ul>				</div>
+				
+								<a href="#offcanvas" class="uk-navbar-toggle uk-navbar-flip uk-visible-small" data-uk-offcanvas></a>
+				
+								<div class="uk-navbar-brand uk-visible-small"><a class="tm-logo-small" href="https://www.sudokuweb.org"><span style="color:#000">SUDOKUWEB</span></a></div>
+				
+			</div>
+			<div class="tm-slant-block-bottom"></div>
+		</div>
+		
+				<div class="tm-block ">
+			<section class="top-parallax">
+		        		    </section>
+		</div>
+		
+		
+		
+				<div class="tm-block ">
+			<div class="uk-container uk-container-center">
+				
+													
+				<div class="tm-middle uk-grid" data-uk-grid-match data-uk-grid-margin>
+
+										<div class="tm-main uk-width-medium-1-1">
+
+						
+												<main class="tm-content">
+
+							    
+    <article class="uk-article">
+
+        
+        <h1 class="uk-article-title">Sudoku Generator</h1>
+
+        
+<div id="wrapper">
+        <div id="buttons">
+                <form id="form2" action="" name="form2" method="POST">
+                    <input type="submit" class="buttons_gen" name="sign2" value="9x9" style="width:50px" />
+                    <input type="submit" class="buttons_gen" name="sign2" value="6x6" style="width:50px" />
+                    <input type="submit" class="buttons_gen" name="sign2" value="4x4" style="width:50px" />
+                    <input type="submit" class="buttons_gen" name="sign2" value="4 x 4 - images" style="width:115px" />
+                </form>
+               
+        </div>
+
+<div class="sudoku nine" id="sudoku">
+	<table> 
+        <tr id="line" >
+               
+                <td id="right">               
+                <span class="sedy">5</span>       
+                <td id="right1">               
+                <span class="sedy">4</span>       
+                <td id="right2">               
+                <span class="true">1</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right3">               
+                <span class="sedy">2</span>       
+                <td id="right4">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right5">               
+                <span class="sedy">8</span>       
+                <td id="right6">               
+                <span class="sedy">9</span>       
+                <td id="right7">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right8">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line1" >
+               
+                <td id="right9">               
+                <span class="sedy">7</span>       
+                <td id="right10">               
+                <span class="sedy">8</span>       
+                <td id="right11">               
+                <span class="sedy">6</span>       
+                <td id="right12">               
+                <span class="sedy">1</span>       
+                <td id="right13">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right14">               
+                <span class="true">9</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right15">               
+                <span class="sedy">5</span>       
+                <td id="right16">               
+                <span class="sedy">4</span>       
+                <td id="right17">               
+                <span class="sedy">2</span>        </tr>
+        <tr id="line2" >
+               
+                <td id="right18">               
+                <span class="sedy">2</span>       
+                <td id="right19">               
+                <span class="sedy">9</span>       
+                <td id="right20">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right21">               
+                <span class="sedy">4</span>       
+                <td id="right22">               
+                <span class="true">5</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right23">               
+                <span class="sedy">6</span>       
+                <td id="right24">               
+                <span class="true">8</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right25">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right26">               
+                <span class="true">1</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line3" >
+               
+                <td id="right27">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right28">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right29">               
+                <span class="sedy">5</span>       
+                <td id="right30">               
+                <span class="sedy">9</span>       
+                <td id="right31">               
+                <span class="sedy">8</span>       
+                <td id="right32">               
+                <span class="true">2</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right33">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right34">               
+                <span class="sedy">1</span>       
+                <td id="right35">               
+                <span class="true">4</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line4" >
+               
+                <td id="right36">               
+                <span class="sedy">1</span>       
+                <td id="right37">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right38">               
+                <span class="true">9</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right39">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right40">               
+                <span class="true">4</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right41">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right42">               
+                <span class="true">2</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right43">               
+                <span class="sedy">8</span>       
+                <td id="right44">               
+                <span class="sedy">5</span>        </tr>
+        <tr id="line5" >
+               
+                <td id="right45">               
+                <span class="true">8</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right46">               
+                <span class="sedy">2</span>       
+                <td id="right47">               
+                <span class="true">4</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right48">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right49">               
+                <span class="true">1</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right50">               
+                <span class="sedy">5</span>       
+                <td id="right51">               
+                <span class="sedy">3</span>       
+                <td id="right52">               
+                <span class="true">9</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right53">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line6" >
+               
+                <td id="right54">               
+                <span class="sedy">9</span>       
+                <td id="right55">               
+                <span class="true">5</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right56">               
+                <span class="sedy">7</span>       
+                <td id="right57">               
+                <span class="sedy">8</span>       
+                <td id="right58">               
+                <span class="sedy">6</span>       
+                <td id="right59">               
+                <span class="sedy">1</span>       
+                <td id="right60">               
+                <span class="sedy">4</span>       
+                <td id="right61">               
+                <span class="true">2</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right62">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line7" >
+               
+                <td id="right63">               
+                <span class="true">4</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right64">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right65">               
+                <span class="sedy">2</span>       
+                <td id="right66">               
+                <span class="true">5</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right67">               
+                <span class="sedy">9</span>       
+                <td id="right68">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right69">               
+                <span class="sedy">1</span>       
+                <td id="right70">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right71">               
+                <span class="true">8</span><span class="vloz">&nbsp;</span></td>        </tr>
+        <tr id="line8" >
+               
+                <td id="right72">               
+                <span class="true">6</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right73">               
+                <span class="sedy">1</span>       
+                <td id="right74">               
+                <span class="true">8</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right75">               
+                <span class="true">3</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right76">               
+                <span class="true">2</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right77">               
+                <span class="sedy">4</span>       
+                <td id="right78">               
+                <span class="true">7</span><span class="vloz">&nbsp;</span></td>       
+                <td id="right79">               
+                <span class="sedy">5</span>       
+                <td id="right80">               
+                <span class="true">9</span><span class="vloz">&nbsp;</span></td>        </tr>
+</table>
+
+</div><div id="var">&nbsp;</div>
+<ul id="myid" ><li id = "1" class="toets" ><div class=" toets"><span>1</span></div></li><li id = "2" class="toets" ><div class=" toets"><span>2</span></div></li><li id = "3" class="toets" ><div class=" toets"><span>3</span></div></li><li id = "4" class="toets" ><div class=" toets"><span>4</span></div></li><li id = "5" class="toets" ><div class=" toets"><span>5</span></div></li><li id = "6" class="toets" ><div class=" toets"><span>6</span></div></li><li id = "7" class="toets" ><div class=" toets"><span>7</span></div></li><li id = "8" class="toets" ><div class=" toets"><span>8</span></div></li><li id = "9" class="toets" ><div class=" toets"><span>9</span></div></li><li id = "10" class="toets"><div class="uk-icon-eraser" title="eraser"><span>&nbsp;</span></div></li><li id = "11" class="toets"><div class="hint uk-icon-lightbulb-o" title="hint"><span style="color:#fff">11</span></div></li></ul><div class="hint1">&bull; First select a number/operator and than apply it to a sudoku cell.</div> <br/>
+ <a href="#" class="print" title="Print" onClick="window.print();return false"><i class="uk-icon-print uk-icon-small"></i></a>
+ <input class="oplossing" type="button" value="Solution" style="width:105px" />
+
+</div>
+<div></div>
+<div style="float:right; width:350px"><div class="reklama728_90">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- sudoku responsive -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-1584357430895918"
+     data-ad-slot="7393231453"
+     data-ad-format="auto"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</div></div>
+<div style="clear:both"></div>
+<p></p>
+<h2>Sudoku Online 9&#215;9, 6&#215;6 and 4&#215;4</h2>
+<p><strong>Sudokuweb.org provides online sudoku in 3 levels</strong>, from <strong>the easy games for beginners up to difficult puzzles for sudoku experts.</strong> You can play the sudoku puzzle online on your PC, tablet or iPad or print it and solve it elsewhere.</p>
+<h2>How can I play sudoku online?</h2>
+<p>Solving sudoku online works in the same way like solving it on paper.</p>
+<ol>
+<li>Select your skill level by clicking on a button <strong>[9&#215;9, 6&#215;6, 4&#215;4, 4&#215;4 with images</strong>]  to generate your new sudoku game.</li>
+<li>First, select a number and than fill it in the target sudoku cell.</li>
+<li>Click on the &#8220;<strong>Solution / Hide Solution</strong>&#8221; button reveals / hide the  solution of the entire game.</li>
+<li>You can also <strong>print</strong> the game that you were playing online. The sudoku will be printed without any other text or adds on the page.</li>
+</ol>
+
+        
+    </article>
+
+    
+
+						</main>
+						
+						
+					</div>
+					
+		            		            		            
+				</div>
+			</div>
+								</div>
+		
+		
+		
+		
+		
+				<div class="tm-block tm-block-dark">
+			<div class="uk-container uk-container-center">
+				<footer class="tm-footer uk-text-center">
+
+										<p><a class="tm-totop-scroller uk-margin-bottom" data-uk-smooth-scroll href="#"></a></p>
+					
+					<div class="uk-panel widget_nav_menu"><ul class="uk-subnav uk-subnav-line"><li class="uk-active"><a href="https://www.sudokuweb.org/">Sudoku Generator</a></li><li><a href="https://www.sudokuweb.org/sudoku-puzzle-for-kids/">Rules, tips en trics</a></li><li><a href="https://www.sudokuweb.org/about-us/">About</a></li><li><a href="https://www.sudokuweb.org/privacy-policy/">Privacy</a></li><li><a href="https://www.sudokuweb.org/contact/">Contact</a></li></ul></div>
+<div class="uk-panel qts_widget"><ul id="qtranslateslug-2" class="qts_type_text qts-lang-menu">
+<li  class="qts_lang_item current-menu-item"><a href="https://www.sudokuweb.org/en" lang="en" hreflang="en">English</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/nl" lang="nl" hreflang="nl">Nederlands</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/de" lang="de" hreflang="de">Deutsch</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/es" lang="es" hreflang="es">Español</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/fr" lang="fr" hreflang="fr">Français</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/cs" lang="cs" hreflang="cs">Česky</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/sk" lang="sk" hreflang="sk">Slovensky</a></li>
+<li  class="qts_lang_item "><a href="https://www.sudokuweb.org/pl" lang="pl" hreflang="pl">Polski</a></li>
+<li  class="qts_lang_item last-child"><a href="https://www.sudokuweb.org/ru" lang="ru" hreflang="ru">Русский</a></li>
+</ul>
+</div>
+				</footer>
+			</div>
+				</div>
+		
+	<script type='text/javascript' src='https://www.sudokuweb.org/wp-content/plugins/sudoku-word-press/sudoku2.js?ver=1.1' id='safely_add_script-js'></script>
+<script type='text/javascript' src='https://www.sudokuweb.org/wp-includes/js/wp-embed.min.js?ver=5.8.4' id='wp-embed-js'></script>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-15063671-23"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-15063671-23');
+</script>
+
+		<div id="offcanvas" class="uk-offcanvas">
+		<div class="uk-offcanvas-bar"><ul class="uk-nav uk-nav-offcanvas"><li class="uk-active"><a href="https://www.sudokuweb.org/">Sudoku Generator</a></li><li><a href="https://www.sudokuweb.org/easy-sudoku-4x4-for-kids/">Sudoku 4×4</a></li><li><a href="https://www.sudokuweb.org/easy-sudoku-6x6-for-kids/">Sudoku 6×6</a></li><li><a href="https://www.sudokuweb.org/word-search-puzzle/">Word Search</a></li></ul></div>
+	</div>
+	
+</body>
+</html>
