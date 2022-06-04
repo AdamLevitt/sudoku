@@ -42,7 +42,7 @@ def search(puzzle, row, col):
     return vals
 
 
-def forward_pass(puzzle):
+def forward_pass(puzzle, count):
     """Perform a single forward pass filling in rows, columns, boxes based on Sudoku rules and where possible"""
 
     arr = np.array(puzzle)
@@ -57,6 +57,8 @@ def forward_pass(puzzle):
 
             if len(poss[index]) == 1:
                 arr_temp[index_row, index_col] = poss[index][0]
+
+    count += 1
 
     # Compare possibilities at row level
     for row in range(9):
@@ -75,6 +77,8 @@ def forward_pass(puzzle):
                     poss[key] = [one]
                     arr_temp[int(key[0]), int(key[1])] = poss[key][0]
 
+    count += 1
+
     # Compare possibilities at column level
     for col in range(9):
         col_poss = []
@@ -91,6 +95,8 @@ def forward_pass(puzzle):
                 if int(key[1]) == col and (one in poss[key]):
                     poss[key] = [one]
                     arr_temp[int(key[0]), int(key[1])] = poss[key][0]
+
+    count += 1
 
     # Compare possibilities at box level
     for row in range(0, 9, 3):
@@ -114,11 +120,15 @@ def forward_pass(puzzle):
                         poss[key] = [one]
                         arr_temp[int(key[0]), int(key[1])] = poss[key][0]
 
-        return (arr_temp, poss)
+    count += 1
+
+    return (arr_temp, poss, count)
 
 
 def sudoku(puzzle):
     """return the solved puzzle as a 2d array of 9x9"""
+
+    count = 0
 
     arr = np.array(puzzle)
     arr_current = np.copy(arr)
@@ -134,7 +144,7 @@ def sudoku(puzzle):
     # main loop
     while run:
         # forward pass through puzzle to receive updated sudoku and dictionary of potential numbers at each position
-        arr_temp, poss = forward_pass(arr_current)
+        arr_temp, poss, count = forward_pass(arr_current, count)
 
         # test - is the updated Sudoku equal the previous version
         test = np.array_equal(arr_temp, arr_current)
@@ -142,7 +152,7 @@ def sudoku(puzzle):
         # Solution achieved scenario
         if test and 0 not in arr_temp:
             run = False
-            print("Solution Achieved!!!")
+            print("Solution Achieved!!!", end="\n\n")
 
         # Puzzle has not improved scenario (backtracking)
         elif test:
@@ -174,7 +184,7 @@ def sudoku(puzzle):
         else:
             arr_current = np.copy(arr_temp)
 
-    return arr_temp.tolist()
+    return arr_temp.tolist(), count
 
 
 def print_sudoku(array):
@@ -210,5 +220,7 @@ if __name__ == "__main__":
         [0, 0, 0, 0, 0, 0, 5, 0, 4],
     ]
 
-    test = sudoku(hard)
-    print_sudoku(test)
+    test = sudoku(easy)
+    print_sudoku(test[0])
+    print()
+    print(f"The Number of iterations: {test[1]}")
