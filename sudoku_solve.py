@@ -27,7 +27,7 @@ def box_display_range(row, col):
 
 
 def search(puzzle, row, col):
-    """Show the possible answers for aspecific column and row"""
+    """Show the possible answers for a specific column and row"""
 
     box_arr = box_display(puzzle, row, col)
     vals = []
@@ -146,9 +146,11 @@ def solve(puzzle):
     # Set running condition for loop
     if 0 in arr:
         run = True
+
     else:
         run = False
         arr_temp = np.copy(arr)
+        return arr_temp.tolist(), count
 
     # main loop
     while run:
