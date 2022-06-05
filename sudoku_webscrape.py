@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import numpy as np
 
 
 def request_sudoku():
@@ -32,11 +33,20 @@ def bf_soup(take):
 
     return puzzle_get
 
+
+def format(array):
+    """Format puzzle array into 2d format"""
+
+    np_array = np.array(array)
+    new_format = np.reshape(np_array, (9, 9))
+    return new_format.tolist()
+
+
 def main():
     response = request_sudoku()
 
-    #Store response in file using context manager
-    with open("web_response.html", 'w') as file:
+    # Store response in file using context manager
+    with open("web_response.html", "w") as file:
         file.write(response)
 
     # Open file in context manager
@@ -48,5 +58,7 @@ def main():
 
 if __name__ == "__main__":
     soup = main()
-    puzzle = bf_soup(soup)
+    puzzle_ini = bf_soup(soup)
+    puzzle = format(puzzle_ini)
+    print(puzzle_ini)
     print(puzzle)
