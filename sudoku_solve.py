@@ -134,7 +134,7 @@ def forward_pass(puzzle, count):
     return (arr_temp, poss, count)
 
 
-def sudoku(puzzle):
+def solve(puzzle):
     """return the solved puzzle as a 2d array of 9x9"""
 
     count = 0
@@ -181,6 +181,9 @@ def sudoku(puzzle):
                             for val in poss[key]:
                                 q.put(val)
                             break
+                    else:
+                        continue
+
                     break
 
             # When queue is not empty - revert to stored sudoku, get next value and assign to sudoku at key location, retest
@@ -199,7 +202,6 @@ def sudoku(puzzle):
 def print_sudoku(array):
     """Print the Sudoku table as passed in a grid format"""
 
-    print("SUDOKU TABLE")
     for row in range(9):
         print("".join(str(array[row][col]) + "  " for col in range(9)))
 
@@ -229,7 +231,19 @@ if __name__ == "__main__":
         [0, 0, 0, 0, 0, 0, 5, 0, 4],
     ]
 
-    test = sudoku(hard)
+    hard_new = [
+        [0, 0, 3, 0, 0, 9, 1, 8, 7],
+        [0, 1, 0, 0, 2, 0, 6, 3, 0],
+        [8, 0, 4, 0, 0, 3, 0, 9, 2],
+        [0, 0, 7, 5, 1, 0, 9, 0, 0],
+        [3, 0, 5, 4, 9, 0, 8, 1, 6],
+        [1, 0, 6, 2, 3, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 2, 0, 8, 0, 4, 0, 9],
+        [0, 4, 0, 0, 0, 2, 3, 0, 0],
+    ]
+
+    test = solve(hard_new)
     print_sudoku(test[0])
     print()
     print(f"The Number of iterations: {test[1]}")
