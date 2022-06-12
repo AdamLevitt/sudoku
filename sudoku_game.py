@@ -20,10 +20,21 @@ WIDTH, HEIGHT = BLOCK_SIZE * (GRID_SIZE + LEFT_GUTTER + RIGHT_GUTTER), BLOCK_SIZ
 FPS = 60
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
+left_limit = BLOCK_SIZE * (LEFT_GUTTER + NUMBERS_INDENT)
+right_limit = WIDTH - (BLOCK_SIZE * (RIGHT_GUTTER + NUMBERS_INDENT))
+nblock_size = int(((right_limit - left_limit) - (4 * NUMBERS_GAP)) / 5)
+top_limit = int(
+    (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))
+    + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
+)
+bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
+numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
+
 BLUE = (22, 62, 131)
 WHITE = (255, 255, 255)
 LIGHT_PINK = (221, 160, 221)
 BRIGHT_GREEN = (124, 252, 0)
+GREY = (79, 79, 79)
 
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
 
@@ -31,9 +42,11 @@ IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha(
 class display_board:
     """Board functonality and display class"""
 
-    def __init__(self, highlight, rect_clicked):
+    def __init__(self, highlight, rect_clicked, highlight_number, number_clicked):
         self.highlight = highlight
         self.rect_clicked = rect_clicked
+        self.highlight_number = highlight_number
+        self.number_clicked = number_clicked
 
     def display_board_main(self):
         """displays the board"""
@@ -58,20 +71,17 @@ class display_board:
     def display_number_controls(self):
         """Display Number Selections"""
 
-        left_limit = BLOCK_SIZE * (LEFT_GUTTER + NUMBERS_INDENT)
-        right_limit = WIDTH - (BLOCK_SIZE * (RIGHT_GUTTER + NUMBERS_INDENT))
-        nblock_size = int(((right_limit - left_limit) - (4 * NUMBERS_GAP)) / 5)
-        top_limit = int(
-            (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))
-            + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
-        )
-        bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
-        numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
         count = 1
 
         for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
             for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
                 rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
+
+                if self.highlight_number == "Y" and rectangle == self.number_clicked:
+                    highligh_surface = pygame.Surface((nblock_size, nblock_size))
+                    highligh_surface.fill(GREY)
+                    WINDOW.blit(highligh_surface, (across, down))
+                # pygame.draw.rect(WINDOW, GREY, rectangle)
                 pygame.draw.rect(WINDOW, WHITE, rectangle, 2)
 
                 if count >= 1 and count <= 9:
@@ -96,8 +106,10 @@ def main():
     clock = pygame.time.Clock()
     highlight_square = "N"
     rectangle_click = ""
+    highlight_number = "N"
+    number_click = ""
 
-    board = display_board(highlight_square, rectangle_click)
+    board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
 
     while run:
         clock.tick(FPS)
@@ -121,10 +133,31 @@ def main():
                             and rectangle_click.collidepoint(pos_x, pos_y)
                         ):
                             board.highlight = "N"
+                            break
 
-                        elif rectangle_click.collidepoint(pos_x, pos_y):
+                        if rectangle_click.collidepoint(pos_x, pos_y):
                             board.highlight = "Y"
                             board.rect_clicked = rectangle_click
+                            break
+                    else:
+                        continue
+
+                    break
+
+                for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
+                    for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
+                        rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
+
+                        #         if (
+                        #             board.highlight == "Y"
+                        #             and board.rect_clicked == rectangle_click
+                        #             and rectangle_click.collidepoint(pos_x, pos_y)
+                        #         ):
+                        #             board.highlight = "N"
+
+                        if rectangle.collidepoint(pos_x, pos_y):
+                            board.highlight_number = "Y"
+                            board.number_clicked = rectangle
                             break
                     else:
                         continue
