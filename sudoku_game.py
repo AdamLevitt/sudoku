@@ -66,7 +66,7 @@ class display_board:
             + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
         )
         bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
-        numbers_font = pygame.font.SysFont("comicsans", int(nblock_size/2))
+        numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
         count = 1
 
         for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
@@ -76,15 +76,19 @@ class display_board:
 
                 if count >= 1 and count <= 9:
                     number_text = numbers_font.render(str(count), 1, WHITE)
-                    WINDOW.blit(number_text, (across+(nblock_size/2) - (number_text.get_width()/2),down+(nblock_size/2) - (number_text.get_height()/2)))
-                
+                    WINDOW.blit(
+                        number_text,
+                        (
+                            across + (nblock_size / 2) - (number_text.get_width() / 2),
+                            down + (nblock_size / 2) - (number_text.get_height() / 2),
+                        ),
+                    )
+
                 elif count == 10:
-                    eraser = pygame.transform.scale(IMAGE_0, (nblock_size,nblock_size))
+                    eraser = pygame.transform.scale(IMAGE_0, (nblock_size, nblock_size))
                     WINDOW.blit(eraser, rectangle)
-                
+
                 count += 1
-
-
 
 
 def main():
