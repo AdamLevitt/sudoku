@@ -7,7 +7,7 @@ import os
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
 
-BLOCK_SIZE = 50
+BLOCK_SIZE = 70
 GRID_SIZE = 9
 LEFT_GUTTER = 3
 RIGHT_GUTTER = 1
@@ -24,6 +24,8 @@ BLUE = (22, 62, 131)
 WHITE = (255, 255, 255)
 LIGHT_PINK = (221, 160, 221)
 BRIGHT_GREEN = (124, 252, 0)
+
+IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
 
 
 class display_board:
@@ -64,11 +66,25 @@ class display_board:
             + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
         )
         bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
+        numbers_font = pygame.font.SysFont("comicsans", int(nblock_size/2))
+        count = 1
 
-        for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
-            for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
+        for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
+            for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
                 rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
                 pygame.draw.rect(WINDOW, WHITE, rectangle, 2)
+
+                if count >= 1 and count <= 9:
+                    number_text = numbers_font.render(str(count), 1, WHITE)
+                    WINDOW.blit(number_text, (across+(nblock_size/2) - (number_text.get_width()/2),down+(nblock_size/2) - (number_text.get_height()/2)))
+                
+                elif count == 10:
+                    eraser = pygame.transform.scale(IMAGE_0, (nblock_size,nblock_size))
+                    WINDOW.blit(eraser, rectangle)
+                
+                count += 1
+
+
 
 
 def main():
