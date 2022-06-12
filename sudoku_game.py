@@ -1,4 +1,5 @@
 import pygame
+from regex import D
 import sudoku_solve
 import sudoku_webscrape
 import sys
@@ -24,29 +25,40 @@ LIGHT_PINK = (221, 160, 221)
 BRIGHT_GREEN = (124, 252, 0)
 
 
-def display_board_main(highlight, rect):
-    """displays the board"""
+class display_board:
+    """Board functonality and display class"""
 
-    WINDOW.fill(BLUE)
-    for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
-        for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
-            rectangle = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
-            pygame.draw.rect(WINDOW, WHITE, rectangle, 1)
+    def __init__(self, highlight, rect_clicked):
+        self.highlight = highlight
+        self.rect_clicked = rect_clicked
 
-    for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE * 3):
-        for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE * 3):
-            rectangle = pygame.Rect(across, down, BLOCK_SIZE * 3, BLOCK_SIZE * 3)
-            pygame.draw.rect(WINDOW, LIGHT_PINK, rectangle, 1)
-    
-    if highlight == 'Y':
-        pygame.draw.rect(WINDOW, BRIGHT_GREEN, rect, 3)
+    def display_board_main(self):
+        """displays the board"""
+
+        WINDOW.fill(BLUE)
+        for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
+            for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
+                rectangle = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
+                pygame.draw.rect(WINDOW, WHITE, rectangle, 1)
+
+        for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE * 3):
+            for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE * 3):
+                rectangle = pygame.Rect(across, down, BLOCK_SIZE * 3, BLOCK_SIZE * 3)
+                pygame.draw.rect(WINDOW, LIGHT_PINK, rectangle, 1)
+
+    def highlight_boardsquare(self):
+        """Highligh a cell if clicked"""
+        if self.highlight == "Y":
+            pygame.draw.rect(WINDOW, BRIGHT_GREEN, self.rect_clicked, 3)
 
 
 def main():
     run = True
     clock = pygame.time.Clock()
-    highlight_square = 'N'
-    rectangle_click = ''
+    highlight_square = "N"
+    rectangle_click = ""
+
+    board = display_board(highlight_square, rectangle_click)
 
     while run:
         clock.tick(FPS)
@@ -63,15 +75,25 @@ def main():
                 for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
                     for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
                         rectangle_click = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
-                        if rectangle_click.collidepoint(pos_x, pos_y):
-                            highlight_square = 'Y'
+
+                        if (
+                            board.highlight == "Y"
+                            and board.rect_clicked == rectangle_click
+                            and rectangle_click.collidepoint(pos_x, pos_y)
+                        ):
+                            board.highlight = "N"
+
+                        elif rectangle_click.collidepoint(pos_x, pos_y):
+                            board.highlight = "Y"
+                            board.rect_clicked = rectangle_click
                             break
                     else:
                         continue
 
                     break
 
-        display_board_main(highlight_square, rectangle_click)
+        board.display_board_main()
+        board.highlight_boardsquare()
         pygame.display.update()
 
 
