@@ -20,6 +20,7 @@ WIDTH, HEIGHT = BLOCK_SIZE * (GRID_SIZE + LEFT_GUTTER + RIGHT_GUTTER), BLOCK_SIZ
 FPS = 60
 WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 
+# Variables to assist with displays of buttons
 left_limit = BLOCK_SIZE * (LEFT_GUTTER + NUMBERS_INDENT)
 right_limit = WIDTH - (BLOCK_SIZE * (RIGHT_GUTTER + NUMBERS_INDENT))
 nblock_size = int(((right_limit - left_limit) - (4 * NUMBERS_GAP)) / 5)
@@ -30,12 +31,14 @@ top_limit = int(
 bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
 numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
 
+# Color Constants
 BLUE = (22, 62, 131)
 WHITE = (255, 255, 255)
 LIGHT_PINK = (221, 160, 221)
 BRIGHT_GREEN = (124, 252, 0)
 GREY = (79, 79, 79)
 
+# Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
 
 
@@ -52,11 +55,14 @@ class display_board:
         """displays the board"""
 
         WINDOW.fill(BLUE)
+
+        # Create each square in block
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
                 rectangle = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
                 pygame.draw.rect(WINDOW, WHITE, rectangle, 1)
 
+        # Create 3x3 squares in different color
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE * 3):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE * 3):
                 rectangle = pygame.Rect(across, down, BLOCK_SIZE * 3, BLOCK_SIZE * 3)
@@ -77,13 +83,16 @@ class display_board:
             for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
                 rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
 
+                # Highlight by creating grey surface for 'Number Box' if clicked
                 if self.highlight_number == "Y" and rectangle == self.number_clicked:
                     highligh_surface = pygame.Surface((nblock_size, nblock_size))
                     highligh_surface.fill(GREY)
                     WINDOW.blit(highligh_surface, (across, down))
-                # pygame.draw.rect(WINDOW, GREY, rectangle)
+
+                # Draw the border on each number
                 pygame.draw.rect(WINDOW, WHITE, rectangle, 2)
 
+                # Show the number in each number selection box
                 if count >= 1 and count <= 9:
                     number_text = numbers_font.render(str(count), 1, WHITE)
                     WINDOW.blit(
@@ -94,6 +103,7 @@ class display_board:
                         ),
                     )
 
+                # Show the eraser image in the 10th box
                 elif count == 10:
                     eraser = pygame.transform.scale(IMAGE_0, (nblock_size, nblock_size))
                     WINDOW.blit(eraser, rectangle)
@@ -148,13 +158,14 @@ def main():
                     for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
                         rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
 
-                        #         if (
-                        #             board.highlight == "Y"
-                        #             and board.rect_clicked == rectangle_click
-                        #             and rectangle_click.collidepoint(pos_x, pos_y)
-                        #         ):
-                        #             board.highlight = "N"
-
+                        if (
+                            board.highlight_number == "Y"
+                            and board.number_clicked == rectangle
+                            and rectangle.collidepoint(pos_x, pos_y)
+                        ):
+                            board.highlight_number = "N"
+                            break
+                                    
                         if rectangle.collidepoint(pos_x, pos_y):
                             board.highlight_number = "Y"
                             board.number_clicked = rectangle
