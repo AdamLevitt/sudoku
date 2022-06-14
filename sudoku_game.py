@@ -51,6 +51,9 @@ RED = (102, 0, 0)
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
 
+# User events
+CLICK = pygame.USEREVENT + 1
+
 
 class display_board:
     """Board functonality and display class"""
@@ -132,32 +135,36 @@ class display_board:
 
 
 class option_buttons:
-    """SImulate pushed button"""
+    """Simulate pushed button"""
 
-    def __init__(self, text_displayed, width, height, pos_x, pos_y, flex):
+    def __init__(self, text, width, height, pos_x, pos_y, flex, top_color):
         self.top_rectangle = pygame.Rect(pos_x, pos_y, width, height)
         self.bottom_rectangle = pygame.Rect(pos_x, pos_y, width, height)
-        self.top_color = DARK_GREEN
+        self.top_color = top_color
         self.bottom_color = GREY
-        self.text_surface = option_font.render(text_displayed, True, WHITE)
-        self.text_rect = self.text_surface.get_rect(center=self.top_rectangle.center)
+        self.text = text
         self.press = False
         self.flex = flex
         self.flex_new = flex
         self.original_y = pos_y
 
-    def draw_button(self):
+    def draw_button(self, text_displayed):
         """Draw features"""
 
         self.top_rectangle.y = self.original_y - self.flex_new
-        self.text_rect.center = self.top_rectangle.center
 
         self.bottom_rectangle.midtop = self.top_rectangle.midtop
         self.bottom_rectangle.height = self.top_rectangle.height + self.flex_new
 
         pygame.draw.rect(WINDOW, self.bottom_color, self.bottom_rectangle, border_radius=10)
         pygame.draw.rect(WINDOW, self.top_color, self.top_rectangle, border_radius=10)
+
+        self.text = text_displayed
+        self.text_surface = option_font.render(self.text, True, WHITE)
+        self.text_rect = self.text_surface.get_rect(center=self.top_rectangle.center)
+        self.text_rect.center = self.top_rectangle.center
         WINDOW.blit(self.text_surface, self.text_rect)
+
         self.collide()
 
     def collide(self):
@@ -172,6 +179,7 @@ class option_buttons:
                 self.flex_new = self.flex
                 if self.press == True:
                     self.press = False
+                    pygame.event.post(pygame.event.Event(CLICK))
         else:
             self.flex_new = self.flex
 
@@ -183,9 +191,10 @@ def main():
     rectangle_click = ""
     highlight_number = "N"
     number_click = ""
+    first_button_text = "New Sudoku"
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
-    start_button = option_buttons("New Sudoku", START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5)
+    start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
 
     while run:
         clock.tick(FPS)
@@ -244,14 +253,18 @@ def main():
                         continue
 
                     break
-
-                # Check for mouse click on 'New Puzzle' button
-                # rect_start = pygame.Rect(START_X, START_Y, START_X_LENGTH, START_Y_HEIGHT)
-                # if rect_start.collidepoint(pos_x,pos_y):
+            # Check for event where we click start button & Change button Text/Color
+            if event.type == CLICK:
+                if start_button.text == "New Sudoku":
+                    first_button_text = "Show Solution"
+                    start_button.top_color = RED
+                else:
+                    first_button_text = "New Sudoku"
+                    start_button.top_color = DARK_GREEN
 
         board.display_board_main()
         board.display_number_controls()
-        start_button.draw_button()
+        start_button.draw_button(first_button_text)
         board.highlight_boardsquare()
         pygame.display.update()
 
