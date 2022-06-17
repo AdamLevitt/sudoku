@@ -163,7 +163,6 @@ def solve(puzzle):
         # Solution achieved scenario
         if test and 0 not in arr_temp:
             run = False
-            print("Solution Achieved!!!", end="\n\n")
 
         # Puzzle has not improved scenario (backtracking)
         elif test:
