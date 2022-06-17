@@ -1,8 +1,6 @@
 import numpy as np
 import queue
 
-q = queue.Queue()
-
 
 def box_display(puzzle, row, col):
     """Extract the 3x3 array box related to a column and row"""
@@ -136,6 +134,8 @@ def forward_pass(puzzle, count):
 
 def solve(puzzle):
     """return the solved puzzle as a 2d array of 9x9"""
+
+    q = queue.Queue()
 
     count = 0
 
