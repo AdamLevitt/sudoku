@@ -10,7 +10,7 @@ q = queue.Queue()
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
 
-BLOCK_SIZE = 70
+BLOCK_SIZE = 60
 GRID_SIZE = 9
 LEFT_GUTTER = 4
 RIGHT_GUTTER = 1
@@ -52,6 +52,8 @@ BRIGHT_GREEN = (124, 252, 0)
 DARK_GREEN = (0, 102, 0)
 GREY = (79, 79, 79)
 RED = (102, 0, 0)
+LIGHT_GREY = (130, 130, 130)
+BLACK = (0, 0, 0)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
@@ -72,8 +74,6 @@ class display_board:
     def display_board_main(self):
         """displays the board"""
 
-        WINDOW.fill(BLUE)
-
         # Create each square in block
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
@@ -91,18 +91,26 @@ class display_board:
 
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
+                rectangle = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
                 x_axis = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
                 y_axis = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
                 index = str(x_axis) + str(y_axis)
-                
-                if solution == 'y':
-                    number_insert = main_font.render(str(puzzle[index][1]), 1, WHITE)
+
+                if solution == "y":
+                    if puzzle[index][2] == "initial":
+                        highligh_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+                        highligh_surface.fill(LIGHT_GREY)
+                        WINDOW.blit(highligh_surface, (across, down))
+                        number_insert = main_font.render(str(puzzle[index][1]), 1, BLACK)
+
+                    else:
+                        number_insert = main_font.render(str(puzzle[index][1]), 1, WHITE)
 
                     x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
                     y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
 
                     WINDOW.blit(number_insert, (x_position, y_position))
-                
+
                 else:
 
                     # if response number is '0' do not show
@@ -110,7 +118,15 @@ class display_board:
                         continue
 
                     else:
-                        number_insert = main_font.render(str(puzzle[index][3]), 1, WHITE)
+
+                        if puzzle[index][2] == "initial":
+                            highligh_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
+                            highligh_surface.fill(LIGHT_GREY)
+                            WINDOW.blit(highligh_surface, (across, down))
+                            number_insert = main_font.render(str(puzzle[index][3]), 1, BLACK)
+
+                        else:
+                            number_insert = main_font.render(str(puzzle[index][3]), 1, WHITE)
 
                         x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
                         y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
@@ -346,8 +362,10 @@ def main():
                     start_button.top_color = DARK_GREEN
                     show_solution = "y"
 
-        board.display_board_main()
+        WINDOW.fill(BLUE)
+        # board.display_board_main()
         board.display_numbers(sudoku.puzzle, show_solution)
+        board.display_board_main()
         board.display_number_controls()
         start_button.draw_button(first_button_text)
         board.highlight_boardsquare()
