@@ -123,9 +123,9 @@ def forward_pass(puzzle, count):
 
             for one in ones:
                 for key in poss:
-                    if (
-                        int(key[0]) >= row_min and int(key[0]) <= row_max and int(key[1]) >= col_min and int(key[1]) <= col_max
-                    ) and (one in poss[key]):
+                    if (int(key[0]) >= row_min and int(key[0]) <= row_max and int(key[1]) >= col_min and int(key[1]) <= col_max) and (
+                        one in poss[key]
+                    ):
                         poss[key] = [one]
                         arr_temp[int(key[0]), int(key[1])] = poss[key][0]
 
