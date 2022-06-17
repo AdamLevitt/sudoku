@@ -47,7 +47,7 @@ main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 # Color Constants
 BLUE = (22, 62, 131)
 WHITE = (255, 255, 255)
-LIGHT_PINK = (221, 160, 221)
+LIGHT_PINK = (191, 64, 191)
 BRIGHT_GREEN = (124, 252, 0)
 DARK_GREEN = (0, 102, 0)
 GREY = (79, 79, 79)
@@ -86,26 +86,36 @@ class display_board:
                 rectangle = pygame.Rect(across, down, BLOCK_SIZE * 3, BLOCK_SIZE * 3)
                 pygame.draw.rect(WINDOW, LIGHT_PINK, rectangle, 1)
 
-    def display_numbers(self, puzzle):
-        '''display primary number in grid'''
+    def display_numbers(self, puzzle, solution):
+        """display primary number in grid"""
 
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
                 x_axis = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
                 y_axis = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
                 index = str(x_axis) + str(y_axis)
-
-                # for 'empty' flag show nothing
-                if puzzle[index][2] == "empty":
-                    continue
-
-                else:
-                    number_insert = main_font.render(str(puzzle[index][0]), 1, WHITE)
+                
+                if solution == 'y':
+                    number_insert = main_font.render(str(puzzle[index][1]), 1, WHITE)
 
                     x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
                     y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
 
                     WINDOW.blit(number_insert, (x_position, y_position))
+                
+                else:
+
+                    # if response number is '0' do not show
+                    if puzzle[index][3] == 0:
+                        continue
+
+                    else:
+                        number_insert = main_font.render(str(puzzle[index][3]), 1, WHITE)
+
+                        x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
+                        y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
+
+                        WINDOW.blit(number_insert, (x_position, y_position))
 
     def highlight_boardsquare(self):
         """Highligh a cell if clicked"""
@@ -203,34 +213,52 @@ class option_buttons:
 class sudoku_handle:
     """manage the sudoku puzzle"""
 
-    def __init__(self):
+    def __init__(self, get):
         self.puzzle = {}
-        self.get_puzzle_web()
+        self.get = get
+        self.get_puzzle_web(self.get)
 
-    def get_puzzle_web(self):
+    def get_puzzle_web(self, get_new):
         """Get Puzzle from website and format accordingly"""
 
-        # Get raw HTML data
-        soup = sudoku_webscrape.main()
+        self.get_new = get_new
 
-        # Parse data & format correctly
-        puzzle_ini = sudoku_webscrape.bf_soup(soup)
-        self.puzzle_initial = sudoku_webscrape.format(puzzle_ini)
-        self.puzzle_solved = sudoku_solve.solve(self.puzzle_initial)
+        if self.get_new == "y":
+            # Get raw HTML data
+            soup = sudoku_webscrape.main()
 
-        # Insert flag ('initial') to capture if number was contained in the original puzzle
-        for x in range(9):
-            for y in range(9):
-                index = str(x) + str(y)
-                if self.puzzle_initial[x][y] == 0:
-                    self.puzzle[index] = (self.puzzle_initial[x][y], self.puzzle_solved[0][x][y], "empty")
+            # Parse data & format correctly
+            puzzle_ini = sudoku_webscrape.bf_soup(soup)
+            self.puzzle_initial = sudoku_webscrape.format(puzzle_ini)
+            self.puzzle_solved = sudoku_solve.solve(self.puzzle_initial)
 
-                else:
-                    self.puzzle[index] = (self.puzzle_initial[x][y], self.puzzle_solved[0][x][y], "initial")
+            # Insert flag ('initial') to capture if number was contained in the original puzzle
+            for x in range(9):
+                for y in range(9):
+                    index = str(x) + str(y)
+                    if self.puzzle_initial[x][y] == 0:
+                        self.puzzle[index] = (
+                            self.puzzle_initial[x][y],
+                            self.puzzle_solved[0][x][y],
+                            "empty",
+                            self.puzzle_initial[x][y],
+                        )
 
-                self.puzzle["diff"] = self.puzzle_solved[1]
+                    else:
+                        self.puzzle[index] = (
+                            self.puzzle_initial[x][y],
+                            self.puzzle_solved[0][x][y],
+                            "initial",
+                            self.puzzle_initial[x][y],
+                        )
 
-        print(self.puzzle)
+                    self.puzzle["difficulty"] = self.puzzle_solved[1]
+
+        else:
+            for x in range(9):
+                for y in range(9):
+                    index = str(x) + str(y)
+                    self.puzzle[index] = (0, 0, "empty", 0)
 
 
 def main():
@@ -241,10 +269,12 @@ def main():
     highlight_number = "N"
     number_click = ""
     first_button_text = "New Sudoku"
+    get_puzzle = "n"
+    show_solution = "n"
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
-    sudoku = sudoku_handle()
+    sudoku = sudoku_handle(get_puzzle)
 
     while run:
         clock.tick(FPS)
@@ -308,12 +338,16 @@ def main():
                 if start_button.text == "New Sudoku":
                     first_button_text = "Show Solution"
                     start_button.top_color = RED
+                    get_puzzle = "y"
+                    show_solution = "n"
+                    sudoku.get_puzzle_web(get_puzzle)
                 else:
                     first_button_text = "New Sudoku"
                     start_button.top_color = DARK_GREEN
+                    show_solution = "y"
 
         board.display_board_main()
-        board.display_numbers(sudoku.puzzle)
+        board.display_numbers(sudoku.puzzle, show_solution)
         board.display_number_controls()
         start_button.draw_button(first_button_text)
         board.highlight_boardsquare()
