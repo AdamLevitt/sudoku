@@ -334,7 +334,7 @@ def main():
     highlight_number = "N"
     number_click = ""
     first_button_text = "New Sudoku"
-    # first_notes_text = "Notes Mode OFF"
+    first_notes_text = "Turn Notes ON"
     get_puzzle = "n"
     show_solution = "n"
     pos_selected = "99"
@@ -344,7 +344,7 @@ def main():
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
-    # notes_button = option_buttons(first_notes_text, 100, 50, 200, 200, DARK_GREEN)
+    notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, DARK_GREEN)
     sudoku = sudoku_handle(get_puzzle)
 
     while run:
@@ -447,12 +447,24 @@ def main():
                 start_button.top_color = DARK_GREEN
                 show_solution = "y"
 
+        # Check for click of start button & Change button Text/Color
+        if notes_button.event == "y":
+
+            if notes_button.text == "Turn Notes ON":
+                first_notes_text = "Turn Notes OFF"
+                notes_button.top_color = RED
+
+            else:
+                first_notes_text = "Turn Notes ON"
+                notes_button.top_color = DARK_GREEN
+
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev)
         board.display_numbers(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
         start_button.draw_button(first_button_text, option_font)
+        notes_button.draw_button(first_notes_text, notes_font)
         board.highlight_boardsquare()
         pygame.display.update()
 
