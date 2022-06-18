@@ -49,6 +49,7 @@ numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
 option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
+notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 10))
 
 
 # Color Constants
@@ -145,6 +146,31 @@ class display_board:
                         y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
 
                         WINDOW.blit(number_insert, (x_position, y_position))
+
+    def display_notes(self, puzzle, solution):
+        """Display Notes on Grid"""
+
+        for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
+            for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
+                rectangle = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
+                x_axis = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
+                y_axis = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
+                index = str(x_axis) + str(y_axis)
+
+                if solution == "y":
+                    pass
+
+                else:
+                    if puzzle[index][2] == "initial":
+                        continue
+
+                    else:
+                        if puzzle[index][4] != [0]:
+                            notes_insert = notes_num_font.render(str(puzzle[index][4]), 1, WHITE)
+                            x_position = across + (BLOCK_SIZE / 2) - (notes_insert.get_width() / 2)
+                            y_position = down + (BLOCK_SIZE * (4 / 5)) - (notes_insert.get_height() / 2)
+
+                            WINDOW.blit(notes_insert, (x_position, y_position))
 
     def highlight_boardsquare(self):
         """Highligh a cell if clicked"""
@@ -275,6 +301,10 @@ class sudoku_handle:
             for x in range(9):
                 for y in range(9):
                     index = str(x) + str(y)
+
+                    # Reset notes when new sudoku is called
+                    self.notes[index] = [0]
+
                     if self.puzzle_initial[x][y] == 0:
                         self.puzzle[index] = (
                             self.puzzle_initial[x][y],
@@ -309,6 +339,7 @@ class sudoku_handle:
         self.insert_prev = insert_prev
         self.notes_flag = notes_flag
 
+        # Update for main numbers
         if self.notes_flag == "n":
             if self.insert_prev != 0 and self.insert == 0:
                 pass
@@ -335,6 +366,42 @@ class sudoku_handle:
             ):
                 temp_list = list(self.puzzle[select])
                 temp_list[3] = 0
+                self.puzzle[select] = tuple(temp_list)
+
+        # Update for Notes array
+        else:
+
+            if self.insert_prev != 0 and self.insert == 0:
+                pass
+
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert <= 9
+            ):
+                temp_list = list(self.puzzle[select])
+
+                if self.insert not in temp_list[4]:
+                    temp_list[4].append(self.insert)
+
+                    if 0 in temp_list[4]:
+                        temp_list[4].remove(0)
+
+                self.puzzle[select] = tuple(temp_list)
+
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert == 10
+            ):
+                temp_list = list(self.puzzle[select])
+                temp_list[4] = [0]
                 self.puzzle[select] = tuple(temp_list)
 
 
@@ -454,6 +521,7 @@ def main():
                 start_button.top_color = RED
                 get_puzzle = "y"
                 show_solution = "n"
+                num_insert = 0
                 sudoku.get_puzzle_web(get_puzzle)
             else:
                 first_button_text = "New Sudoku"
@@ -470,15 +538,17 @@ def main():
                 board.highlight_number = "N"
                 num_insert = 0
 
-
             else:
                 first_notes_text = "Notes ON"
                 notes_button.top_color = DARK_GREEN
                 notes_flag = "y"
+                board.highlight_number = "N"
+                num_insert = 0
 
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev, notes_flag)
         board.display_numbers(sudoku.puzzle, show_solution)
+        board.display_notes(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
         start_button.draw_button(first_button_text, option_font)
