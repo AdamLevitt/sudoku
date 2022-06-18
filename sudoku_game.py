@@ -37,10 +37,17 @@ top_limit = int(
 )
 bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
 
+# variables for notes button
+note_h = 30
+note_w = 125
+note_x = right_limit + 30
+note_y = ((bottom_limit - top_limit) - note_h) / 2 + top_limit
+
 # Fonts
 numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
 option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
+notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
 
 
 # Color Constants
@@ -56,9 +63,6 @@ BLACK = (0, 0, 0)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
-
-# User events
-CLICK = pygame.USEREVENT + 1
 
 
 class display_board:
@@ -197,10 +201,12 @@ class option_buttons:
         self.flex = flex
         self.flex_new = flex
         self.original_y = pos_y
+        self.event = "n"
 
-    def draw_button(self, text_displayed):
+    def draw_button(self, text_displayed, font):
         """Draw features"""
 
+        self.event = "n"
         self.top_rectangle.y = self.original_y - self.flex_new
 
         self.bottom_rectangle.midtop = self.top_rectangle.midtop
@@ -210,7 +216,7 @@ class option_buttons:
         pygame.draw.rect(WINDOW, self.top_color, self.top_rectangle, border_radius=10)
 
         self.text = text_displayed
-        self.text_surface = option_font.render(self.text, True, WHITE)
+        self.text_surface = font.render(self.text, True, WHITE)
         self.text_rect = self.text_surface.get_rect(center=self.top_rectangle.center)
         self.text_rect.center = self.top_rectangle.center
         WINDOW.blit(self.text_surface, self.text_rect)
@@ -229,7 +235,8 @@ class option_buttons:
                 self.flex_new = self.flex
                 if self.press == True:
                     self.press = False
-                    pygame.event.post(pygame.event.Event(CLICK))
+                    self.event = "y"
+                    # pygame.event.post(pygame.event.Event(CLICK))
         else:
             self.flex_new = self.flex
 
@@ -412,18 +419,6 @@ def main():
                         continue
 
                     break
-            # Check for event where we click start button & Change button Text/Color
-            if event.type == CLICK:
-                if start_button.text == "New Sudoku":
-                    first_button_text = "Show Solution"
-                    start_button.top_color = RED
-                    get_puzzle = "y"
-                    show_solution = "n"
-                    sudoku.get_puzzle_web(get_puzzle)
-                else:
-                    first_button_text = "New Sudoku"
-                    start_button.top_color = DARK_GREEN
-                    show_solution = "y"
 
             # Allowing user to input number on keyboard - check for event based on keydown
             if event.type == pygame.KEYDOWN:
@@ -438,12 +433,26 @@ def main():
                         keyboard_enter = "y"
                         break
 
+        # Check for click of start button & Change button Text/Color
+        if start_button.event == "y":
+
+            if start_button.text == "New Sudoku":
+                first_button_text = "Show Solution"
+                start_button.top_color = RED
+                get_puzzle = "y"
+                show_solution = "n"
+                sudoku.get_puzzle_web(get_puzzle)
+            else:
+                first_button_text = "New Sudoku"
+                start_button.top_color = DARK_GREEN
+                show_solution = "y"
+
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev)
         board.display_numbers(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
-        start_button.draw_button(first_button_text)
+        start_button.draw_button(first_button_text, option_font)
         board.highlight_boardsquare()
         pygame.display.update()
 
