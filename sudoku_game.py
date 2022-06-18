@@ -285,6 +285,8 @@ class sudoku_handle:
                     self.puzzle[index] = (0, 0, "empty", 0)
 
     def update_puzzle(self, select, insert, insert_prev):
+        """Update puzzle based on user inputs"""
+
         self.select = select
         self.insert = insert
         self.insert_prev = insert_prev
@@ -325,14 +327,17 @@ def main():
     highlight_number = "N"
     number_click = ""
     first_button_text = "New Sudoku"
+    # first_notes_text = "Notes Mode OFF"
     get_puzzle = "n"
     show_solution = "n"
     pos_selected = "99"
     num_insert = 0
     num_insert_prev = 0
+    keyboard_enter = "n"
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
+    # notes_button = option_buttons(first_notes_text, 100, 50, 200, 200, DARK_GREEN)
     sudoku = sudoku_handle(get_puzzle)
 
     while run:
@@ -368,6 +373,9 @@ def main():
                             board.highlight = "Y"
                             board.rect_clicked = rectangle_click
                             pos_selected = index
+                            if keyboard_enter == "y":
+                                num_insert_prev = copy.deepcopy(num_insert)
+                                num_insert = 0
                             break
 
                     else:
@@ -397,6 +405,7 @@ def main():
                             board.number_clicked = rectangle
                             num_insert_prev = copy.deepcopy(num_insert)
                             num_insert = count
+                            keyboard_enter = "n"
                             break
 
                     else:
@@ -415,6 +424,19 @@ def main():
                     first_button_text = "New Sudoku"
                     start_button.top_color = DARK_GREEN
                     show_solution = "y"
+
+            # Allowing user to input number on keyboard - check for event based on keydown
+            if event.type == pygame.KEYDOWN:
+
+                for num in range(1, 10):
+                    event_check = "K_" + str(num)
+
+                    call = getattr(pygame, event_check)
+                    if event.key == call and board.highlight_number == "N" and board.highlight == "Y":
+                        num_insert_prev = copy.deepcopy(num_insert)
+                        num_insert = num
+                        keyboard_enter = "y"
+                        break
 
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev)
