@@ -3,9 +3,7 @@ import sudoku_solve
 import sudoku_webscrape
 import sys
 import os
-import queue
-
-q = queue.Queue()
+import copy
 
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
@@ -248,7 +246,7 @@ class sudoku_handle:
             self.puzzle_initial = sudoku_webscrape.format(puzzle_ini)
             self.puzzle_solved = sudoku_solve.solve(self.puzzle_initial)
 
-            # Insert flag ('initial') to capture if number was contained in the original puzzle
+            # Insert flag ('initial' or 'empty') to capture if number was contained in the original puzzle
             for x in range(9):
                 for y in range(9):
                     index = str(x) + str(y)
@@ -276,6 +274,38 @@ class sudoku_handle:
                     index = str(x) + str(y)
                     self.puzzle[index] = (0, 0, "empty", 0)
 
+    def update_puzzle(self, select, insert, insert_prev):
+        self.select = select
+        self.insert = insert
+        self.insert_prev = insert_prev
+
+        if self.insert_prev != 0 and self.insert == 0:
+            pass
+
+        elif (
+            int(self.select[0]) >= 0
+            and int(self.select[0]) <= 8
+            and int(self.select[1]) >= 0
+            and int(self.select[1]) <= 8
+            and self.puzzle[select][2] == "empty"
+            and self.insert <= 9
+        ):
+            temp_list = list(self.puzzle[select])
+            temp_list[3] = self.insert
+            self.puzzle[select] = tuple(temp_list)
+
+        elif (
+            int(self.select[0]) >= 0
+            and int(self.select[0]) <= 8
+            and int(self.select[1]) >= 0
+            and int(self.select[1]) <= 8
+            and self.puzzle[select][2] == "empty"
+            and self.insert == 10
+        ):
+            temp_list = list(self.puzzle[select])
+            temp_list[3] = 0
+            self.puzzle[select] = tuple(temp_list)
+
 
 def main():
     run = True
@@ -287,6 +317,9 @@ def main():
     first_button_text = "New Sudoku"
     get_puzzle = "n"
     show_solution = "n"
+    pos_selected = "99"
+    num_insert = 0
+    num_insert_prev = 0
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
@@ -308,6 +341,9 @@ def main():
                 for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
                     for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
                         rectangle_click = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
+                        x_ax = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
+                        y_ax = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
+                        index = str(x_ax) + str(y_ax)
 
                         if (
                             board.highlight == "Y"
@@ -315,11 +351,13 @@ def main():
                             and rectangle_click.collidepoint(pos_x, pos_y)
                         ):
                             board.highlight = "N"
+                            pos_selected = "99"
                             break
 
                         if rectangle_click.collidepoint(pos_x, pos_y):
                             board.highlight = "Y"
                             board.rect_clicked = rectangle_click
+                            pos_selected = index
                             break
 
                     else:
@@ -328,9 +366,11 @@ def main():
                     break
 
                 # Check for mouse click on number selection grid
+                count = 0
                 for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
                     for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
                         rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
+                        count += 1
 
                         if (
                             board.highlight_number == "Y"
@@ -338,11 +378,15 @@ def main():
                             and rectangle.collidepoint(pos_x, pos_y)
                         ):
                             board.highlight_number = "N"
+                            num_insert_prev = copy.deepcopy(num_insert)
+                            num_insert = 0
                             break
 
                         if rectangle.collidepoint(pos_x, pos_y):
                             board.highlight_number = "Y"
                             board.number_clicked = rectangle
+                            num_insert_prev = copy.deepcopy(num_insert)
+                            num_insert = count
                             break
 
                     else:
@@ -363,7 +407,7 @@ def main():
                     show_solution = "y"
 
         WINDOW.fill(BLUE)
-        # board.display_board_main()
+        sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev)
         board.display_numbers(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
