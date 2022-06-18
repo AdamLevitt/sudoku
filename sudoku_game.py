@@ -1,3 +1,4 @@
+from pickle import REDUCE
 import pygame
 import sudoku_solve
 import sudoku_webscrape
@@ -247,7 +248,7 @@ class sudoku_handle:
     def __init__(self, get):
         self.puzzle = {}
         self.notes = {}
-        
+
         for x in range(9):
             for y in range(9):
                 index = str(x) + str(y)
@@ -300,39 +301,41 @@ class sudoku_handle:
                     index = str(x) + str(y)
                     self.puzzle[index] = (0, 0, "empty", 0, [0])
 
-    def update_puzzle(self, select, insert, insert_prev):
+    def update_puzzle(self, select, insert, insert_prev, notes_flag):
         """Update puzzle based on user inputs"""
 
         self.select = select
         self.insert = insert
         self.insert_prev = insert_prev
+        self.notes_flag = notes_flag
 
-        if self.insert_prev != 0 and self.insert == 0:
-            pass
+        if self.notes_flag == "n":
+            if self.insert_prev != 0 and self.insert == 0:
+                pass
 
-        elif (
-            int(self.select[0]) >= 0
-            and int(self.select[0]) <= 8
-            and int(self.select[1]) >= 0
-            and int(self.select[1]) <= 8
-            and self.puzzle[select][2] == "empty"
-            and self.insert <= 9
-        ):
-            temp_list = list(self.puzzle[select])
-            temp_list[3] = self.insert
-            self.puzzle[select] = tuple(temp_list)
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert <= 9
+            ):
+                temp_list = list(self.puzzle[select])
+                temp_list[3] = self.insert
+                self.puzzle[select] = tuple(temp_list)
 
-        elif (
-            int(self.select[0]) >= 0
-            and int(self.select[0]) <= 8
-            and int(self.select[1]) >= 0
-            and int(self.select[1]) <= 8
-            and self.puzzle[select][2] == "empty"
-            and self.insert == 10
-        ):
-            temp_list = list(self.puzzle[select])
-            temp_list[3] = 0
-            self.puzzle[select] = tuple(temp_list)
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert == 10
+            ):
+                temp_list = list(self.puzzle[select])
+                temp_list[3] = 0
+                self.puzzle[select] = tuple(temp_list)
 
 
 def main():
@@ -343,17 +346,18 @@ def main():
     highlight_number = "N"
     number_click = ""
     first_button_text = "New Sudoku"
-    first_notes_text = "Turn Notes ON"
+    first_notes_text = "Notes OFF"
     get_puzzle = "n"
     show_solution = "n"
     pos_selected = "99"
     num_insert = 0
     num_insert_prev = 0
     keyboard_enter = "n"
+    notes_flag = "n"
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
-    notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, DARK_GREEN)
+    notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, RED)
     sudoku = sudoku_handle(get_puzzle)
 
     while run:
@@ -459,16 +463,21 @@ def main():
         # Check for click of start button & Change button Text/Color
         if notes_button.event == "y":
 
-            if notes_button.text == "Turn Notes ON":
-                first_notes_text = "Turn Notes OFF"
+            if notes_button.text == "Notes ON":
+                first_notes_text = "Notes OFF"
                 notes_button.top_color = RED
+                notes_flag = "n"
+                board.highlight_number = "N"
+                num_insert = 0
+
 
             else:
-                first_notes_text = "Turn Notes ON"
+                first_notes_text = "Notes ON"
                 notes_button.top_color = DARK_GREEN
+                notes_flag = "y"
 
         WINDOW.fill(BLUE)
-        sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev)
+        sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev, notes_flag)
         board.display_numbers(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
