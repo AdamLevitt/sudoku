@@ -246,6 +246,13 @@ class sudoku_handle:
 
     def __init__(self, get):
         self.puzzle = {}
+        self.notes = {}
+        
+        for x in range(9):
+            for y in range(9):
+                index = str(x) + str(y)
+                self.notes[index] = [0]
+
         self.get = get
         self.get_puzzle_web(self.get)
 
@@ -273,6 +280,7 @@ class sudoku_handle:
                             self.puzzle_solved[0][x][y],
                             "empty",
                             self.puzzle_initial[x][y],
+                            self.notes[index],
                         )
 
                     else:
@@ -281,6 +289,7 @@ class sudoku_handle:
                             self.puzzle_solved[0][x][y],
                             "initial",
                             self.puzzle_initial[x][y],
+                            self.notes[index],
                         )
 
                     self.puzzle["difficulty"] = self.puzzle_solved[1]
@@ -289,7 +298,7 @@ class sudoku_handle:
             for x in range(9):
                 for y in range(9):
                     index = str(x) + str(y)
-                    self.puzzle[index] = (0, 0, "empty", 0)
+                    self.puzzle[index] = (0, 0, "empty", 0, [0])
 
     def update_puzzle(self, select, insert, insert_prev):
         """Update puzzle based on user inputs"""
