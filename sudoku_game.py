@@ -21,6 +21,7 @@ START_X = 40
 START_Y = (TOP_GUTTTER * BLOCK_SIZE) + START_DIP
 START_X_LENGTH = (LEFT_GUTTER * BLOCK_SIZE) - (2 * START_X)
 START_Y_HEIGHT = BLOCK_SIZE - (2 * START_DIP)
+THICK = 2
 
 WIDTH, HEIGHT = BLOCK_SIZE * (GRID_SIZE + LEFT_GUTTER + RIGHT_GUTTER), BLOCK_SIZE * (GRID_SIZE + TOP_GUTTTER + BOTTOM_GUTTER)
 FPS = 60
@@ -82,7 +83,16 @@ class display_board:
         for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE * 3):
             for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE * 3):
                 rectangle = pygame.Rect(across, down, BLOCK_SIZE * 3, BLOCK_SIZE * 3)
-                pygame.draw.rect(WINDOW, LIGHT_PINK, rectangle, 1)
+                pygame.draw.rect(WINDOW, LIGHT_PINK, rectangle, THICK)
+
+        # Rectangle to match outter border around grid thickness
+        recta = pygame.Rect(
+            (BLOCK_SIZE * LEFT_GUTTER) + THICK,
+            (BLOCK_SIZE * TOP_GUTTTER) + THICK,
+            (GRID_SIZE * BLOCK_SIZE) - (2 * THICK),
+            (GRID_SIZE * BLOCK_SIZE) - (2 * THICK),
+        )
+        pygame.draw.rect(WINDOW, LIGHT_PINK, recta, THICK)
 
     def display_numbers(self, puzzle, solution):
         """display primary number in grid"""
@@ -135,7 +145,7 @@ class display_board:
         """Highligh a cell if clicked"""
 
         if self.highlight == "Y":
-            pygame.draw.rect(WINDOW, BRIGHT_GREEN, self.rect_clicked, 3)
+            pygame.draw.rect(WINDOW, BRIGHT_GREEN, self.rect_clicked, 4)
 
     def display_number_controls(self):
         """Display Number Selections"""
