@@ -384,8 +384,23 @@ class sudoku_handle:
 
         # Update for main numbers
         if self.notes_flag == "n":
+
             if self.insert_prev != 0 and self.insert == 0:
                 pass
+
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert <= 9
+                and self.insert >= 1
+            ):
+                temp_list = list(self.puzzle[select])
+                temp_list[3] = self.insert
+                temp_list[4] = [0]
+                self.puzzle[select] = tuple(temp_list)
 
             elif (
                 int(self.select[0]) >= 0
@@ -397,7 +412,7 @@ class sudoku_handle:
             ):
                 temp_list = list(self.puzzle[select])
                 temp_list[3] = self.insert
-                temp_list[4] = [0]
+                # temp_list[4] = [0]
                 self.puzzle[select] = tuple(temp_list)
 
         # Update for Notes array
