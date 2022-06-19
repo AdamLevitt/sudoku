@@ -491,6 +491,9 @@ def main():
             time_format = str(datetime.timedelta(seconds=sec))
             time_count = time_format[:7]
 
+        else:
+            time_count = "0:00:00"
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
