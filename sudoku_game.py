@@ -354,6 +354,7 @@ class sudoku_handle:
             ):
                 temp_list = list(self.puzzle[select])
                 temp_list[3] = self.insert
+                temp_list[4] = [0]
                 self.puzzle[select] = tuple(temp_list)
 
         # Update for Notes array
@@ -372,7 +373,7 @@ class sudoku_handle:
             ):
                 temp_list = list(self.puzzle[select])
 
-                if self.insert not in temp_list[4]:
+                if self.insert not in temp_list[4] and temp_list[3] == 0:
                     temp_list[4].append(self.insert)
 
                     if 0 in temp_list[4]:
