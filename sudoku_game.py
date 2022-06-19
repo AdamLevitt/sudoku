@@ -5,6 +5,7 @@ import sudoku_webscrape
 import sys
 import os
 import copy
+import numpy as np
 
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
@@ -33,8 +34,7 @@ left_limit = BLOCK_SIZE * (LEFT_GUTTER + NUMBERS_INDENT)
 right_limit = WIDTH - (BLOCK_SIZE * (RIGHT_GUTTER + NUMBERS_INDENT))
 nblock_size = int(((right_limit - left_limit) - (4 * NUMBERS_GAP)) / 5)
 top_limit = int(
-    (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))
-    + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
+    (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE)) + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
 )
 bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
 
@@ -49,7 +49,7 @@ numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
 option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
-notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 10))
+notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 6))
 
 
 # Color Constants
@@ -166,11 +166,49 @@ class display_board:
 
                     else:
                         if puzzle[index][4] != [0]:
-                            notes_insert = notes_num_font.render(str(puzzle[index][4]), 1, WHITE)
-                            x_position = across + (BLOCK_SIZE / 2) - (notes_insert.get_width() / 2)
-                            y_position = down + (BLOCK_SIZE * (4 / 5)) - (notes_insert.get_height() / 2)
 
-                            WINDOW.blit(notes_insert, (x_position, y_position))
+                            # Reshape array based on unknown number of elements (3 elements per row)
+                            list_ref = puzzle[index][4]
+                            n = 3
+                            reshaped = [list_ref[i : i + n] + [None] * (i + n - len(list_ref)) for i in range(0, len(list_ref), n)]
+                            rows = len(reshaped)
+
+                            # Placement of Notes based on number of rows
+                            if rows == 1:
+                                line1 = "".join(str(reshaped[0][col]) + "  " for col in range(len(reshaped[0])) if reshaped[0][col] != None)
+                                notes_insert = notes_num_font.render(str(line1), 1, WHITE)
+                                x_position = across + (BLOCK_SIZE / 2) - (notes_insert.get_width() / 2)
+                                y_position = down + (BLOCK_SIZE / 2) - (notes_insert.get_height() / 2)
+                                WINDOW.blit(notes_insert, (x_position, y_position))
+
+                            if rows == 2:
+                                line1 = "".join(str(reshaped[0][col]) + "  " for col in range(len(reshaped[0])) if reshaped[0][col] != None)
+                                line2 = "".join(str(reshaped[1][col]) + "  " for col in range(len(reshaped[1])) if reshaped[1][col] != None)
+                                notes_insert1 = notes_num_font.render(str(line1), 1, WHITE)
+                                notes_insert2 = notes_num_font.render(str(line2), 1, WHITE)
+                                x_position1 = across + (BLOCK_SIZE / 2) - (notes_insert1.get_width() / 2)
+                                x_position2 = across + (BLOCK_SIZE / 2) - (notes_insert2.get_width() / 2)
+                                y_position1 = down + (BLOCK_SIZE / 2) - 11
+                                y_position2 = down + (BLOCK_SIZE / 2) + 3
+                                WINDOW.blit(notes_insert1, (x_position1, y_position1))
+                                WINDOW.blit(notes_insert2, (x_position2, y_position2))
+
+                            if rows == 3:
+                                line1 = "".join(str(reshaped[0][col]) + "  " for col in range(len(reshaped[0])) if reshaped[0][col] != None)
+                                line2 = "".join(str(reshaped[1][col]) + "  " for col in range(len(reshaped[1])) if reshaped[1][col] != None)
+                                line3 = "".join(str(reshaped[2][col]) + "  " for col in range(len(reshaped[2])) if reshaped[2][col] != None)
+                                notes_insert1 = notes_num_font.render(str(line1), 1, WHITE)
+                                notes_insert2 = notes_num_font.render(str(line2), 1, WHITE)
+                                notes_insert3 = notes_num_font.render(str(line3), 1, WHITE)
+                                x_position1 = across + (BLOCK_SIZE / 2) - (notes_insert1.get_width() / 2)
+                                x_position2 = across + (BLOCK_SIZE / 2) - (notes_insert2.get_width() / 2)
+                                x_position3 = across + (BLOCK_SIZE / 2) - (notes_insert3.get_width() / 2)
+                                y_position1 = down + (BLOCK_SIZE / 2) - 19
+                                y_position2 = down + (BLOCK_SIZE / 2) - (notes_insert2.get_height() / 2)
+                                y_position3 = down + (BLOCK_SIZE / 2) + 8
+                                WINDOW.blit(notes_insert1, (x_position1, y_position1))
+                                WINDOW.blit(notes_insert2, (x_position2, y_position2))
+                                WINDOW.blit(notes_insert3, (x_position3, y_position3))
 
     def highlight_boardsquare(self):
         """Highligh a cell if clicked"""
@@ -438,11 +476,7 @@ def main():
                         y_ax = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
                         index = str(x_ax) + str(y_ax)
 
-                        if (
-                            board.highlight == "Y"
-                            and board.rect_clicked == rectangle_click
-                            and rectangle_click.collidepoint(pos_x, pos_y)
-                        ):
+                        if board.highlight == "Y" and board.rect_clicked == rectangle_click and rectangle_click.collidepoint(pos_x, pos_y):
                             board.highlight = "N"
                             pos_selected = "99"
                             break
@@ -468,11 +502,7 @@ def main():
                         rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
                         count += 1
 
-                        if (
-                            board.highlight_number == "Y"
-                            and board.number_clicked == rectangle
-                            and rectangle.collidepoint(pos_x, pos_y)
-                        ):
+                        if board.highlight_number == "Y" and board.number_clicked == rectangle and rectangle.collidepoint(pos_x, pos_y):
                             board.highlight_number = "N"
                             num_insert_prev = copy.deepcopy(num_insert)
                             num_insert = 0
