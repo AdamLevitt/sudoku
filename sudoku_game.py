@@ -356,18 +356,6 @@ class sudoku_handle:
                 temp_list[3] = self.insert
                 self.puzzle[select] = tuple(temp_list)
 
-            elif (
-                int(self.select[0]) >= 0
-                and int(self.select[0]) <= 8
-                and int(self.select[1]) >= 0
-                and int(self.select[1]) <= 8
-                and self.puzzle[select][2] == "empty"
-                and self.insert == 10
-            ):
-                temp_list = list(self.puzzle[select])
-                temp_list[3] = 0
-                self.puzzle[select] = tuple(temp_list)
-
         # Update for Notes array
         else:
 
@@ -392,17 +380,19 @@ class sudoku_handle:
 
                 self.puzzle[select] = tuple(temp_list)
 
-            elif (
-                int(self.select[0]) >= 0
-                and int(self.select[0]) <= 8
-                and int(self.select[1]) >= 0
-                and int(self.select[1]) <= 8
-                and self.puzzle[select][2] == "empty"
-                and self.insert == 10
-            ):
-                temp_list = list(self.puzzle[select])
-                temp_list[4] = [0]
-                self.puzzle[select] = tuple(temp_list)
+        # When Eraser is chosen delete both 'Notes' and 'Main Numbers'
+        if (
+            int(self.select[0]) >= 0
+            and int(self.select[0]) <= 8
+            and int(self.select[1]) >= 0
+            and int(self.select[1]) <= 8
+            and self.puzzle[select][2] == "empty"
+            and self.insert == 10
+        ):
+            temp_list = list(self.puzzle[select])
+            temp_list[3] = 0
+            temp_list[4] = [0]
+            self.puzzle[select] = tuple(temp_list)
 
 
 def main():
