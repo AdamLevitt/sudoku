@@ -433,6 +433,16 @@ class sudoku_handle:
             temp_list[4] = [0]
             self.puzzle[select] = tuple(temp_list)
 
+    def clear_puzzle(self):
+        for x in range(9):
+            for y in range(9):
+                index = str(x) + str(y)
+
+                temp_list = list(self.puzzle[index])
+                temp_list[3] = temp_list[0]
+                temp_list[4] = [0]
+                self.puzzle[index] = tuple(temp_list)
+
 
 def main():
     run = True
@@ -455,7 +465,7 @@ def main():
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
     notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, RED)
-    clear_button = option_buttons(clear_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y + 75, 5, ORANGE)
+    clear_button = option_buttons(clear_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y + 70, 5, ORANGE)
     sudoku = sudoku_handle(get_puzzle)
 
     while run:
@@ -567,6 +577,13 @@ def main():
                 notes_flag = "y"
                 board.highlight_number = "N"
                 num_insert = 0
+
+        # Check for click of 'Clear' button
+        if clear_button.event == "y":
+
+            board.highlight_number = "N"
+            num_insert = 0
+            sudoku.clear_puzzle()
 
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev, notes_flag)
