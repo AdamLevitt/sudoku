@@ -4,7 +4,6 @@ import sudoku_webscrape
 import sys
 import os
 import copy
-import numpy as np
 
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
@@ -561,7 +560,7 @@ def main():
                 start_button.top_color = DARK_GREEN
                 show_solution = "y"
 
-        # Check for click of start button & Change button Text/Color
+        # Check for click of 'notes' button
         if notes_button.event == "y":
 
             if notes_button.text == "Notes ON":
