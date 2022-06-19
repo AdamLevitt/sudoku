@@ -1,4 +1,3 @@
-from pickle import REDUCE
 import pygame
 import sudoku_solve
 import sudoku_webscrape
@@ -62,6 +61,7 @@ GREY = (79, 79, 79)
 RED = (102, 0, 0)
 LIGHT_GREY = (130, 130, 130)
 BLACK = (0, 0, 0)
+ORANGE = (255, 94, 19)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
@@ -443,6 +443,7 @@ def main():
     number_click = ""
     first_button_text = "New Sudoku"
     first_notes_text = "Notes OFF"
+    clear_text = "Clear Puzzle"
     get_puzzle = "n"
     show_solution = "n"
     pos_selected = "99"
@@ -454,6 +455,7 @@ def main():
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
     notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, RED)
+    clear_button = option_buttons(clear_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y + 75, 5, ORANGE)
     sudoku = sudoku_handle(get_puzzle)
 
     while run:
@@ -574,6 +576,7 @@ def main():
         board.display_number_controls()
         start_button.draw_button(first_button_text, option_font)
         notes_button.draw_button(first_notes_text, notes_font)
+        clear_button.draw_button(clear_text, option_font)
         board.highlight_boardsquare()
         pygame.display.update()
 
