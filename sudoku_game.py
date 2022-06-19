@@ -449,6 +449,11 @@ class sudoku_handle:
                 self.puzzle[index] = tuple(temp_list)
 
 
+def set_start_time():
+    start_time = pygame.time.get_ticks()
+    return start_time
+
+
 def main():
     run = True
     clock = pygame.time.Clock()
@@ -467,6 +472,8 @@ def main():
     num_insert_prev = 0
     keyboard_enter = "n"
     notes_flag = "n"
+    time_flag = "n"
+    time_count = ""
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
@@ -478,10 +485,11 @@ def main():
         clock.tick(FPS)
 
         # Track time for clock
-        elapsed_time = pygame.time.get_ticks() - start_time
-        sec = elapsed_time / 1000
-        time_format = str(datetime.timedelta(seconds=sec))
-        time_count = time_format[:7]
+        if time_flag == "y":
+            elapsed_time = pygame.time.get_ticks() - start_time
+            sec = elapsed_time / 1000
+            time_format = str(datetime.timedelta(seconds=sec))
+            time_count = time_format[:7]
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -568,10 +576,14 @@ def main():
                 show_solution = "n"
                 num_insert = 0
                 sudoku.get_puzzle_web(get_puzzle)
+                start_time = set_start_time()
+                time_flag = "y"
+
             else:
                 first_button_text = "New Sudoku"
                 start_button.top_color = DARK_GREEN
                 show_solution = "y"
+                time_flag = "n"
 
         # Check for click of 'notes' button
         if notes_button.event == "y":
