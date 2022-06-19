@@ -4,6 +4,7 @@ import sudoku_webscrape
 import sys
 import os
 import copy
+import datetime
 
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
@@ -74,6 +75,11 @@ class display_board:
         self.rect_clicked = rect_clicked
         self.highlight_number = highlight_number
         self.number_clicked = number_clicked
+
+    def clock(self, time):
+        self.time = time
+        time_text = numbers_font.render("Clock: " + str(time), 1, WHITE)
+        WINDOW.blit(time_text, (35, 210))
 
     def display_board_main(self):
         """displays the board"""
@@ -446,6 +452,7 @@ class sudoku_handle:
 def main():
     run = True
     clock = pygame.time.Clock()
+    start_time = pygame.time.get_ticks()
     highlight_square = "N"
     rectangle_click = ""
     highlight_number = "N"
@@ -469,6 +476,12 @@ def main():
 
     while run:
         clock.tick(FPS)
+
+        # Track time for clock
+        elapsed_time = pygame.time.get_ticks() - start_time
+        sec = elapsed_time / 1000
+        time_format = str(datetime.timedelta(seconds=sec))
+        time_count = time_format[:7]
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -590,6 +603,7 @@ def main():
         board.display_notes(sudoku.puzzle, show_solution)
         board.display_board_main()
         board.display_number_controls()
+        board.clock(time_count)
         start_button.draw_button(first_button_text, option_font)
         notes_button.draw_button(first_notes_text, notes_font)
         clear_button.draw_button(clear_text, option_font)
