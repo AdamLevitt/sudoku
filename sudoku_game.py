@@ -13,6 +13,7 @@ pygame.mixer.init()
 DING_SOUND = pygame.mixer.Sound(os.path.join("assets", "correct.wav"))
 WRONG_SOUND = pygame.mixer.Sound(os.path.join("assets", "wrong.wav"))
 SCRIBBLE_SOUND = pygame.mixer.Sound(os.path.join("assets", "scribble.wav"))
+WIN_SOUND = pygame.mixer.Sound(os.path.join("assets", "win.wav"))
 
 BLOCK_SIZE = 60
 GRID_SIZE = 9
@@ -384,12 +385,13 @@ class option_buttons:
 
 
 class sudoku_handle:
-    """manage the sudoku puzzle"""
+    """Manage the sudoku puzzle"""
 
     def __init__(self, get):
         self.puzzle = {}
         self.notes = {}
         self.mistakes = 0
+        self.win = "n"
 
         for x in range(9):
             for y in range(9):
@@ -587,6 +589,25 @@ class sudoku_handle:
         ):
             SCRIBBLE_SOUND.play()
 
+    def check_win(self):
+
+        for col in range(9):
+            for row in range(9):
+                index = str(col) + str(row)
+                temp_list = list(self.puzzle[index])
+
+                if int(temp_list[1]) == int(temp_list[3]):
+                    self.win = "y"
+
+                elif int(temp_list[1]) != int(temp_list[3]):
+                    self.win = "n"
+                    break
+
+            else:
+                continue
+
+            break
+
 
 def set_start_time():
     """Set Start time function"""
@@ -626,6 +647,11 @@ def main():
 
     while run:
         clock.tick(FPS)
+
+        sudoku.check_win()
+        if sudoku.win == "y" and time_flag != "init":
+            time_flag = "n"
+            WIN_SOUND.play()
 
         # Track time for clock
         if time_flag == "y":
