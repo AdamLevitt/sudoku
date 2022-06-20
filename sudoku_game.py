@@ -49,6 +49,7 @@ option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
 notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 6))
+mistakes_font = pygame.font.SysFont("calibri", 20)
 
 
 # Color Constants
@@ -77,9 +78,25 @@ class display_board:
         self.number_clicked = number_clicked
 
     def clock(self, time):
+        """Show the clock on screen"""
+
         self.time = time
+
         time_text = numbers_font.render("Clock: " + str(time), 1, WHITE)
         WINDOW.blit(time_text, (35, 210))
+
+    def mistakes_show(self, mistakes):
+        """show the number of mistakes on screen"""
+
+        self.mistakes_called = mistakes
+
+        mistakes_num = mistakes_font.render(str(self.mistakes_called), 1, RED)
+        mistakes_txt = mistakes_font.render("Mistakes: ", 1, WHITE)
+
+        y_pos = ((BLOCK_SIZE * TOP_GUTTTER) / 2) - (mistakes_num.get_height() / 2)
+        x_pos = WIDTH - (mistakes_num.get_width()) - 10
+
+        WINDOW.blit(mistakes_num, (x_pos, y_pos))
 
     def display_board_main(self):
         """displays the board"""
@@ -317,6 +334,7 @@ class sudoku_handle:
     def __init__(self, get):
         self.puzzle = {}
         self.notes = {}
+        self.mistakes = 0
 
         for x in range(9):
             for y in range(9):
@@ -454,6 +472,8 @@ class sudoku_handle:
             self.puzzle[select] = tuple(temp_list)
 
     def clear_puzzle(self):
+        """Clear Puzzle (numbers and notes)"""
+
         for x in range(9):
             for y in range(9):
                 index = str(x) + str(y)
@@ -463,8 +483,27 @@ class sudoku_handle:
                 temp_list[4] = [0]
                 self.puzzle[index] = tuple(temp_list)
 
+    def check_mistakes(self, new_square, notes_status, action_type, num_in, pos):
+        """Checking for MIstakes enter incorrectly by User - function called in specific events"""
+
+        self.new_square = new_square
+        self.notes_status = notes_status
+        self.action_type = action_type
+        self.num_in = num_in
+        self.pos = pos
+
+        # Conditions around when a mistake should be considered
+        if notes_status == "n" and self.new_square == "y" and self.num_in != 0 and self.num_in != 10:
+
+            if int(self.puzzle[self.pos][1]) == int(self.num_in):
+                pass
+            else:
+                self.mistakes += 1
+
 
 def set_start_time():
+    """Set Start time function"""
+
     start_time = pygame.time.get_ticks()
     return start_time
 
@@ -489,6 +528,7 @@ def main():
     notes_flag = "n"
     time_flag = "n"
     time_count = ""
+    new_square_flag = "n"
 
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
@@ -526,18 +566,34 @@ def main():
                         y_ax = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
                         index = str(x_ax) + str(y_ax)
 
+                        # Remove highlight if already selected
                         if board.highlight == "Y" and board.rect_clicked == rectangle_click and rectangle_click.collidepoint(pos_x, pos_y):
                             board.highlight = "N"
                             pos_selected = "99"
+
+                            # Flag for new square de-activated
+                            new_square_flag = "n"
+
+                            # Update the Check_mistake function
+                            sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
                             break
 
+                        # Rectangle is selected
                         if rectangle_click.collidepoint(pos_x, pos_y):
                             board.highlight = "Y"
                             board.rect_clicked = rectangle_click
                             pos_selected = index
+
+                            # When changing square selected - don't want numbers entered by keyboard to get inserted (only when selected on number selection grid)
                             if keyboard_enter == "y":
                                 num_insert_prev = copy.deepcopy(num_insert)
                                 num_insert = 0
+
+                            # Flag for new square activated
+                            new_square_flag = "y"
+
+                            # Update the Check_mistake function
+                            sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
                             break
 
                     else:
@@ -564,6 +620,10 @@ def main():
                             num_insert_prev = copy.deepcopy(num_insert)
                             num_insert = count
                             keyboard_enter = "n"
+
+                            # Update the Check_mistake function
+                            sudoku.check_mistakes(new_square_flag, notes_flag, 2, num_insert, pos_selected)
+
                             break
 
                     else:
@@ -582,6 +642,10 @@ def main():
                         num_insert_prev = copy.deepcopy(num_insert)
                         num_insert = num
                         keyboard_enter = "y"
+
+                        # Update the Check_mistake function
+                        sudoku.check_mistakes(new_square_flag, notes_flag, 3, num_insert, pos_selected)
+
                         break
 
         # Check for click of start button & Change button Text/Color
@@ -634,6 +698,7 @@ def main():
         board.display_board_main()
         board.display_number_controls()
         board.clock(time_count)
+        board.mistakes_show(sudoku.mistakes)
         start_button.draw_button(first_button_text, option_font)
         notes_button.draw_button(first_notes_text, notes_font)
         clear_button.draw_button(clear_text, option_font)
