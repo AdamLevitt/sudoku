@@ -47,6 +47,7 @@ note_y = ((bottom_limit - top_limit) - note_h) / 2 + top_limit
 numbers_font = pygame.font.SysFont("comicsans", int(nblock_size / 2))
 option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
+main_wrong_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2), bold=True)
 notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
 notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 6))
 mistakes_font = pygame.font.SysFont("calibri", 30, bold=True)
@@ -137,16 +138,21 @@ class display_board:
                 y_axis = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
                 index = str(x_axis) + str(y_axis)
 
+                # Selected to see the solution
                 if solution == "y":
+
+                    # Initial puzzle cells
                     if puzzle[index][2] == "initial":
                         highligh_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
                         highligh_surface.fill(LIGHT_GREY)
                         WINDOW.blit(highligh_surface, (across, down))
                         number_insert = main_font.render(str(puzzle[index][1]), 1, BLACK)
 
+                    # Correct cells
                     elif puzzle[index][1] == puzzle[index][3]:
                         number_insert = main_font.render(str(puzzle[index][1]), 1, WHITE)
 
+                    # Incorrect or empty cells
                     else:
                         number_insert = main_font.render(str(puzzle[index][1]), 1, GREEN)
 
@@ -162,15 +168,19 @@ class display_board:
                         continue
 
                     else:
-
+                        
+                        #Initial puzzle cell visuals
                         if puzzle[index][2] == "initial":
                             highligh_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
                             highligh_surface.fill(LIGHT_GREY)
                             WINDOW.blit(highligh_surface, (across, down))
                             number_insert = main_font.render(str(puzzle[index][3]), 1, BLACK)
 
-                        else:
+                        if puzzle[index][1] == puzzle[index][3]:
                             number_insert = main_font.render(str(puzzle[index][3]), 1, WHITE)
+
+                        else:
+                            number_insert = main_wrong_font.render(str(puzzle[index][3]), 1, RED_BRIGHT)
 
                         x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
                         y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
