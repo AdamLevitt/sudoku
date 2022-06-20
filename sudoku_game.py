@@ -52,6 +52,8 @@ notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
 notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 6))
 mistakes_font = pygame.font.SysFont("calibri", 30, bold=True)
 mistakes_txt_font = pygame.font.SysFont("calibri", 30)
+diff_txt_font = pygame.font.SysFont("calibri", 20)
+diff_font = pygame.font.SysFont("calibri", 20, bold=True)
 
 
 # Color Constants
@@ -67,6 +69,7 @@ LIGHT_GREY = (130, 130, 130)
 BLACK = (0, 0, 0)
 ORANGE = (255, 94, 19)
 GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
@@ -103,6 +106,33 @@ class display_board:
 
         WINDOW.blit(mistakes_num, (x_pos, y_pos))
         WINDOW.blit(mistakes_txt, (x_txt_pos, y_pos))
+
+    def difficulty_show(self, new_trigger, diffi):
+        """Show Difficulty Rating on Screen"""
+
+        self.new_trigger = new_trigger
+        self.diffi = diffi
+
+        # Text render
+        diff_txt = diff_txt_font.render("This Puzzle is Rated:", 1, WHITE)
+
+        # Create rating tiers based on computer passes
+        if int(self.diffi) < 35:
+            diff = diff_font.render("Easy", 1, GREEN)
+
+        elif int(self.diffi) < 70:
+            diff = diff_font.render("Medium", ORANGE)
+
+        else:
+            diff = diff_font.render("Hard", 1, RED_BRIGHT)
+
+        x_txt_pos = ((LEFT_GUTTER * BLOCK_SIZE) / 2) - (diff_txt.get_width() / 2)
+        x_pos = ((LEFT_GUTTER * BLOCK_SIZE) / 2) - (diff.get_width() / 2)
+        y_txt_pos = 450
+
+        # Blit wording and tier
+        WINDOW.blit(diff_txt, (x_txt_pos, y_txt_pos))
+        WINDOW.blit(diff, (x_pos, y_txt_pos + 30))
 
     def display_board_main(self):
         """displays the board"""
@@ -176,9 +206,11 @@ class display_board:
                             WINDOW.blit(highligh_surface, (across, down))
                             number_insert = main_font.render(str(puzzle[index][3]), 1, BLACK)
 
+                        # Number entered correctly
                         if puzzle[index][1] == puzzle[index][3]:
                             number_insert = main_font.render(str(puzzle[index][3]), 1, WHITE)
 
+                        # Number is incorect
                         else:
                             number_insert = main_wrong_font.render(str(puzzle[index][3]), 1, RED_BRIGHT)
 
@@ -363,7 +395,7 @@ class sudoku_handle:
         self.get_puzzle_web(self.get)
 
     def get_puzzle_web(self, get_new):
-        """Get Puzzle from website and format accordingly"""
+        """Get Puzzle from site and format accordingly"""
 
         self.get_new = get_new
 
@@ -384,6 +416,7 @@ class sudoku_handle:
                     # Reset notes when new sudoku is called
                     self.notes[index] = [0]
 
+                    # Setup puzzle dictionary for 'empty' cells
                     if self.puzzle_initial[x][y] == 0:
                         self.puzzle[index] = (
                             self.puzzle_initial[x][y],
@@ -393,6 +426,7 @@ class sudoku_handle:
                             self.notes[index],
                         )
 
+                    # Setup puzzle dictionary for 'initial puzzle' cells
                     else:
                         self.puzzle[index] = (
                             self.puzzle_initial[x][y],
@@ -402,6 +436,7 @@ class sudoku_handle:
                             self.notes[index],
                         )
 
+                    # Store the difficulty rating in dictionary
                     self.puzzle["difficulty"] = self.puzzle_solved[1]
 
         else:
@@ -421,9 +456,11 @@ class sudoku_handle:
         # Update for main numbers
         if self.notes_flag == "n":
 
+            # Situation where we go from number to no number selected - pass
             if self.insert_prev != 0 and self.insert == 0:
                 pass
 
+            # Number selected (erase notes)
             elif (
                 int(self.select[0]) >= 0
                 and int(self.select[0]) <= 8
@@ -438,6 +475,7 @@ class sudoku_handle:
                 temp_list[4] = [0]
                 self.puzzle[select] = tuple(temp_list)
 
+            # Eraser selected (Notes should remain intact)
             elif (
                 int(self.select[0]) >= 0
                 and int(self.select[0]) <= 8
@@ -548,6 +586,7 @@ def main():
     time_count = ""
     new_square_flag = "n"
 
+    # Init classes
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
     start_button = option_buttons(first_button_text, START_X_LENGTH, START_Y_HEIGHT, START_X, START_Y, 5, DARK_GREEN)
     notes_button = option_buttons(first_notes_text, note_w, note_h, note_x, note_y, 5, RED)
@@ -566,10 +605,9 @@ def main():
 
         elif time_flag == "init":
             time_count = "0:00:00"
-        
+
         else:
             pass
-
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -719,7 +757,6 @@ def main():
         else:
             clear_button.top_color = ORANGE
 
-
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev, notes_flag)
         board.display_numbers(sudoku.puzzle, show_solution)
@@ -728,6 +765,10 @@ def main():
         board.display_number_controls()
         board.clock(time_count)
         board.mistakes_show(sudoku.mistakes)
+
+        if time_flag == "y" or time_flag == "n":
+            board.difficulty_show(time_flag, sudoku.puzzle["difficulty"])
+
         start_button.draw_button(first_button_text, option_font)
         notes_button.draw_button(first_notes_text, notes_font)
         clear_button.draw_button(clear_text, option_font)
