@@ -65,6 +65,7 @@ RED_BRIGHT = (238, 75, 43)
 LIGHT_GREY = (130, 130, 130)
 BLACK = (0, 0, 0)
 ORANGE = (255, 94, 19)
+GREEN = (0, 255, 0)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()
@@ -143,8 +144,11 @@ class display_board:
                         WINDOW.blit(highligh_surface, (across, down))
                         number_insert = main_font.render(str(puzzle[index][1]), 1, BLACK)
 
-                    else:
+                    elif puzzle[index][1] == puzzle[index][3]:
                         number_insert = main_font.render(str(puzzle[index][1]), 1, WHITE)
+
+                    else:
+                        number_insert = main_font.render(str(puzzle[index][1]), 1, GREEN)
 
                     x_position = across + (BLOCK_SIZE / 2) - (number_insert.get_width() / 2)
                     y_position = down + (BLOCK_SIZE / 2) - (number_insert.get_height() / 2)
