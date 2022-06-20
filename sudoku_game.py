@@ -74,7 +74,6 @@ LIGHT_GREY = (130, 130, 130)
 BLACK = (0, 0, 0)
 ORANGE = (255, 94, 19)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)
 
 # Import Images
 IMAGE_0 = pygame.image.load(os.path.join("assets", "eraser.png")).convert_alpha()

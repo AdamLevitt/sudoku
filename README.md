@@ -8,7 +8,7 @@ This Game was created as a learning exercise - consisted of the following basic 
 4. Store the solution as well as the diffculty level of the puzzle
 5. Create a game using Pygame that will make use of steps 1-4
 
-![Screen Shot 2022-06-20 at 11 02 27 AM](https://user-images.githubusercontent.com/81199296/174630875-58c9ae81-7056-424f-9924-a61ecfeb95ed.png)
+![Screen Shot 2022-06-20 at 11 18 56 AM](https://user-images.githubusercontent.com/81199296/174633627-f6812e99-34db-4449-b6a5-cd22b9ebd583.png)
 
 #### Game Functions
 
