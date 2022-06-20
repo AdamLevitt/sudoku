@@ -49,7 +49,8 @@ option_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 main_font = pygame.font.SysFont("calibri", int(START_Y_HEIGHT / 2))
 notes_font = pygame.font.SysFont("calibri", int(note_h / 2))
 notes_num_font = pygame.font.SysFont("calibri", int(BLOCK_SIZE / 6))
-mistakes_font = pygame.font.SysFont("calibri", 20)
+mistakes_font = pygame.font.SysFont("calibri", 30, bold=True)
+mistakes_txt_font = pygame.font.SysFont("calibri", 30)
 
 
 # Color Constants
@@ -60,6 +61,7 @@ BRIGHT_GREEN = (124, 252, 0)
 DARK_GREEN = (0, 102, 0)
 GREY = (79, 79, 79)
 RED = (102, 0, 0)
+RED_BRIGHT = (238, 75, 43)
 LIGHT_GREY = (130, 130, 130)
 BLACK = (0, 0, 0)
 ORANGE = (255, 94, 19)
@@ -90,13 +92,15 @@ class display_board:
 
         self.mistakes_called = mistakes
 
-        mistakes_num = mistakes_font.render(str(self.mistakes_called), 1, RED)
-        mistakes_txt = mistakes_font.render("Mistakes: ", 1, WHITE)
+        mistakes_num = mistakes_font.render(str(self.mistakes_called), 1, RED_BRIGHT)
+        mistakes_txt = mistakes_txt_font.render("Mistakes: ", 1, WHITE)
 
         y_pos = ((BLOCK_SIZE * TOP_GUTTTER) / 2) - (mistakes_num.get_height() / 2)
-        x_pos = WIDTH - (mistakes_num.get_width()) - 10
+        x_pos = WIDTH - (mistakes_num.get_width()) - 20
+        x_txt_pos = x_pos - mistakes_txt.get_width() - 10
 
         WINDOW.blit(mistakes_num, (x_pos, y_pos))
+        WINDOW.blit(mistakes_txt, (x_txt_pos, y_pos))
 
     def display_board_main(self):
         """displays the board"""
