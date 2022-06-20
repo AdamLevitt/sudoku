@@ -1,7 +1,7 @@
 # Sudoku Solver & GAME
 
 This Game was created as a learning exercise - consisted of the following basic elements:
-  1) Use webscraping (beautiful Soup) to obtain a starting Sudoku Puzzle
+  1) Use webscraping (Beautiful Soup) to obtain a starting Sudoku Puzzle
   2) Format the puzzle as required
   3) Created a solving algo that will calculate the solution
   4) Store the solution as well as the diffculty level of the puzzle
