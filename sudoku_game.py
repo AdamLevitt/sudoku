@@ -444,6 +444,7 @@ class sudoku_handle:
                     # Store the difficulty rating in dictionary
                     self.puzzle["difficulty"] = self.puzzle_solved[1]
 
+        # Set inital puzzle elements before called
         else:
             for x in range(9):
                 for y in range(9):
@@ -479,6 +480,33 @@ class sudoku_handle:
                 temp_list[3] = self.insert
                 temp_list[4] = [0]
                 self.puzzle[select] = tuple(temp_list)
+
+                # Delete notes from corresponding 'box, row, col' automatically where applicable
+                hold = []
+                row_min, row_max, col_min, col_max = sudoku_solve.box_display_range(int(self.select[1]), int(self.select[0]))
+
+                # Add box elements
+                for col in range(col_min, col_max + 1):
+                    for row in range(row_min, row_max + 1):
+                        hold.append(str(col) + str(row))
+
+                # Add row and column elements
+                for count in range(9):
+                    hold.append(str(self.select[0]) + str(count))
+                    hold.append(str(count) + str(self.select[1]))
+
+                # Delete duplicates
+                temp_set = set(hold)
+                hold = list(temp_set)
+
+                # Cycle through related columns, rows, box and if answer in priciple cell is correct delete applicable notes
+                for cell in hold:
+                    temp_list = list(self.puzzle[cell])
+
+                    if self.insert in temp_list[4] and self.insert == self.puzzle[select][1]:
+                        temp_list[4].remove(self.insert)
+
+                    self.puzzle[cell] = tuple(temp_list)
 
         # Update for Notes array
         else:
