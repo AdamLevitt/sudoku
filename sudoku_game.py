@@ -8,6 +8,11 @@ import datetime
 
 pygame.init()
 pygame.display.set_caption("SUDOKU GAME")
+pygame.mixer.init()
+
+DING_SOUND = pygame.mixer.Sound(os.path.join("assets", "correct.wav"))
+WRONG_SOUND = pygame.mixer.Sound(os.path.join("assets", "wrong.wav"))
+SCRIBBLE_SOUND = pygame.mixer.Sound(os.path.join("assets", "scribble.wav"))
 
 BLOCK_SIZE = 60
 GRID_SIZE = 9
@@ -552,9 +557,21 @@ class sudoku_handle:
         if notes_status == "n" and self.new_square == "y" and self.num_in != 0 and self.num_in != 10:
 
             if int(self.puzzle[self.pos][1]) == int(self.num_in):
-                pass
+                DING_SOUND.play()
+
             else:
                 self.mistakes += 1
+                WRONG_SOUND.play()
+
+        # Quick check when note is inserted - check only for new notes
+        if (
+            notes_status == "y"
+            and self.new_square == "y"
+            and self.num_in != 0
+            and self.num_in != 10
+            and (self.num_in not in list(self.puzzle[self.pos])[4])
+        ):
+            SCRIBBLE_SOUND.play()
 
 
 def set_start_time():
