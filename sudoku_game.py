@@ -544,7 +544,7 @@ def main():
     num_insert_prev = 0
     keyboard_enter = "n"
     notes_flag = "n"
-    time_flag = "n"
+    time_flag = "init"
     time_count = ""
     new_square_flag = "n"
 
@@ -564,8 +564,12 @@ def main():
             time_format = str(datetime.timedelta(seconds=sec))
             time_count = time_format[:7]
 
-        else:
+        elif time_flag == "init":
             time_count = "0:00:00"
+        
+        else:
+            pass
+
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
