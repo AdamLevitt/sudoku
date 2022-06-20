@@ -126,7 +126,7 @@ class display_board:
             diff = diff_font.render("Easy", 1, GREEN)
 
         elif int(self.diffi) < 70:
-            diff = diff_font.render("Medium", ORANGE)
+            diff = diff_font.render("Medium", 1, ORANGE)
 
         else:
             diff = diff_font.render("Hard", 1, RED_BRIGHT)
