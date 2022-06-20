@@ -168,8 +168,8 @@ class display_board:
                         continue
 
                     else:
-                        
-                        #Initial puzzle cell visuals
+
+                        # Initial puzzle cell visuals
                         if puzzle[index][2] == "initial":
                             highligh_surface = pygame.Surface((BLOCK_SIZE, BLOCK_SIZE))
                             highligh_surface.fill(LIGHT_GREY)
@@ -341,7 +341,7 @@ class option_buttons:
                 if self.press == True:
                     self.press = False
                     self.event = "y"
-                    # pygame.event.post(pygame.event.Event(CLICK))
+
         else:
             self.flex_new = self.flex
 
@@ -708,6 +708,13 @@ def main():
             board.highlight_number = "N"
             num_insert = 0
             sudoku.clear_puzzle()
+
+        if show_solution == "y":
+            clear_button.top_color = GREY
+
+        else:
+            clear_button.top_color = ORANGE
+
 
         WINDOW.fill(BLUE)
         sudoku.update_puzzle(pos_selected, num_insert, num_insert_prev, notes_flag)
