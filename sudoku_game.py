@@ -467,7 +467,15 @@ class sudoku_handle:
                 pass
 
             # Number selected (erase notes)
-            elif int(self.select[0]) >= 0 and int(self.select[0]) <= 8 and int(self.select[1]) >= 0 and int(self.select[1]) <= 8 and self.puzzle[select][2] == "empty" and self.insert <= 9 and self.insert >= 1:
+            elif (
+                int(self.select[0]) >= 0
+                and int(self.select[0]) <= 8
+                and int(self.select[1]) >= 0
+                and int(self.select[1]) <= 8
+                and self.puzzle[select][2] == "empty"
+                and self.insert <= 9
+                and self.insert >= 1
+            ):
                 temp_list = list(self.puzzle[select])
                 temp_list[3] = self.insert
                 temp_list[4] = [0]
