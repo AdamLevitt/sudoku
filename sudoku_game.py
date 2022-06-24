@@ -38,9 +38,7 @@ WINDOW = pygame.display.set_mode((WIDTH, HEIGHT))
 left_limit = BLOCK_SIZE * (LEFT_GUTTER + NUMBERS_INDENT)
 right_limit = WIDTH - (BLOCK_SIZE * (RIGHT_GUTTER + NUMBERS_INDENT))
 nblock_size = int(((right_limit - left_limit) - (4 * NUMBERS_GAP)) / 5)
-top_limit = int(
-    (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE)) + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2
-)
+top_limit = int((BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE)) + ((HEIGHT - (BLOCK_SIZE * (TOP_GUTTTER + GRID_SIZE))) - ((2 * nblock_size) + NUMBERS_GAP)) / 2)
 bottom_limit = top_limit + 2 * nblock_size + NUMBERS_GAP
 
 # variables for notes button
@@ -469,15 +467,7 @@ class sudoku_handle:
                 pass
 
             # Number selected (erase notes)
-            elif (
-                int(self.select[0]) >= 0
-                and int(self.select[0]) <= 8
-                and int(self.select[1]) >= 0
-                and int(self.select[1]) <= 8
-                and self.puzzle[select][2] == "empty"
-                and self.insert <= 9
-                and self.insert >= 1
-            ):
+            elif int(self.select[0]) >= 0 and int(self.select[0]) <= 8 and int(self.select[1]) >= 0 and int(self.select[1]) <= 8 and self.puzzle[select][2] == "empty" and self.insert <= 9 and self.insert >= 1:
                 temp_list = list(self.puzzle[select])
                 temp_list[3] = self.insert
                 temp_list[4] = [0]
@@ -516,14 +506,7 @@ class sudoku_handle:
             if self.insert_prev != 0 and self.insert == 0:
                 pass
 
-            elif (
-                int(self.select[0]) >= 0
-                and int(self.select[0]) <= 8
-                and int(self.select[1]) >= 0
-                and int(self.select[1]) <= 8
-                and self.puzzle[select][2] == "empty"
-                and self.insert <= 9
-            ):
+            elif int(self.select[0]) >= 0 and int(self.select[0]) <= 8 and int(self.select[1]) >= 0 and int(self.select[1]) <= 8 and self.puzzle[select][2] == "empty" and self.insert <= 9:
                 temp_list = list(self.puzzle[select])
 
                 if self.insert not in temp_list[4] and temp_list[3] == 0:
@@ -535,14 +518,7 @@ class sudoku_handle:
                 self.puzzle[select] = tuple(temp_list)
 
         # When Eraser is chosen delete both 'Notes' and 'Main Numbers'
-        if (
-            int(self.select[0]) >= 0
-            and int(self.select[0]) <= 8
-            and int(self.select[1]) >= 0
-            and int(self.select[1]) <= 8
-            and self.puzzle[select][2] == "empty"
-            and self.insert == 10
-        ):
+        if int(self.select[0]) >= 0 and int(self.select[0]) <= 8 and int(self.select[1]) >= 0 and int(self.select[1]) <= 8 and self.puzzle[select][2] == "empty" and self.insert == 10:
             temp_list = list(self.puzzle[select])
             temp_list[3] = 0
             temp_list[4] = [0]
@@ -580,14 +556,12 @@ class sudoku_handle:
                 WRONG_SOUND.play()
 
         # Quick check when note is inserted - check only for new notes
-        if (
-            notes_status == "y"
-            and self.new_square == "y"
-            and self.num_in != 0
-            and self.num_in != 10
-            and (self.num_in not in list(self.puzzle[self.pos])[4])
-        ):
+        if notes_status == "y" and self.new_square == "y" and self.num_in != 0 and self.num_in != 10 and (self.num_in not in list(self.puzzle[self.pos])[4]):
             SCRIBBLE_SOUND.play()
+
+        # in a win Scenario reset mistakes counter
+        if self.win == "y":
+            self.mistakes = 0
 
     def check_win(self):
 
@@ -637,6 +611,7 @@ def main():
     time_flag = "init"
     time_count = ""
     new_square_flag = "n"
+    win_flag = "n"
 
     # Init classes
     board = display_board(highlight_square, rectangle_click, highlight_number, number_click)
@@ -648,10 +623,15 @@ def main():
     while run:
         clock.tick(FPS)
 
+        # Initiate check for win scenario and specify behavior
         sudoku.check_win()
-        if sudoku.win == "y" and time_flag != "init":
+        if sudoku.win == "y" and time_flag != "init" and win_flag == "n":
             time_flag = "n"
             WIN_SOUND.play()
+            show_solution = "y"
+            win_flag = "y"
+            first_button_text = "New Sudoku"
+            start_button.top_color = DARK_GREEN
 
         # Track time for clock
         if time_flag == "y":
@@ -672,98 +652,100 @@ def main():
                 pygame.quit()
                 sys.exit()
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                pos_x, pos_y = pygame.mouse.get_pos()
+            # Don't execute if in a 'win' scenario
+            if win_flag == "n":
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    pos_x, pos_y = pygame.mouse.get_pos()
 
-                # Check for mouse click on grid
-                for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
-                    for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
-                        rectangle_click = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
-                        x_ax = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
-                        y_ax = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
-                        index = str(x_ax) + str(y_ax)
+                    # Check for mouse click on grid
+                    for across in range(BLOCK_SIZE * LEFT_GUTTER, WIDTH - (BLOCK_SIZE * RIGHT_GUTTER), BLOCK_SIZE):
+                        for down in range(BLOCK_SIZE * TOP_GUTTTER, HEIGHT - (BLOCK_SIZE * BOTTOM_GUTTER), BLOCK_SIZE):
+                            rectangle_click = pygame.Rect(across, down, BLOCK_SIZE, BLOCK_SIZE)
+                            x_ax = int((across - (BLOCK_SIZE * LEFT_GUTTER)) / BLOCK_SIZE)
+                            y_ax = int((down - (BLOCK_SIZE * TOP_GUTTTER)) / BLOCK_SIZE)
+                            index = str(x_ax) + str(y_ax)
 
-                        # Remove highlight if already selected
-                        if board.highlight == "Y" and board.rect_clicked == rectangle_click and rectangle_click.collidepoint(pos_x, pos_y):
-                            board.highlight = "N"
-                            pos_selected = "99"
+                            # Remove highlight if already selected
+                            if board.highlight == "Y" and board.rect_clicked == rectangle_click and rectangle_click.collidepoint(pos_x, pos_y):
+                                board.highlight = "N"
+                                pos_selected = "99"
 
-                            # Flag for new square de-activated
-                            new_square_flag = "n"
+                                # Flag for new square de-activated
+                                new_square_flag = "n"
 
-                            # Update the Check_mistake function
-                            sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
-                            break
+                                # Update the Check_mistake function
+                                sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
+                                break
 
-                        # Rectangle is selected
-                        if rectangle_click.collidepoint(pos_x, pos_y):
-                            board.highlight = "Y"
-                            board.rect_clicked = rectangle_click
-                            pos_selected = index
+                            # Rectangle is selected
+                            if rectangle_click.collidepoint(pos_x, pos_y):
+                                board.highlight = "Y"
+                                board.rect_clicked = rectangle_click
+                                pos_selected = index
 
-                            # When changing square selected - don't want numbers entered by keyboard to get inserted (only when selected on number selection grid)
-                            if keyboard_enter == "y":
-                                num_insert_prev = copy.deepcopy(num_insert)
-                                num_insert = 0
+                                # When changing square selected - don't want numbers entered by keyboard to get inserted (only when selected on number selection grid)
+                                if keyboard_enter == "y":
+                                    num_insert_prev = copy.deepcopy(num_insert)
+                                    num_insert = 0
 
-                            # Flag for new square activated
-                            new_square_flag = "y"
+                                # Flag for new square activated
+                                new_square_flag = "y"
 
-                            # Update the Check_mistake function
-                            sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
-                            break
+                                # Update the Check_mistake function
+                                sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
+                                break
 
-                    else:
-                        continue
-
-                    break
-
-                # Check for mouse click on number selection grid
-                count = 0
-                for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
-                    for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
-                        rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
-                        count += 1
-
-                        if board.highlight_number == "Y" and board.number_clicked == rectangle and rectangle.collidepoint(pos_x, pos_y):
-                            board.highlight_number = "N"
-                            num_insert_prev = copy.deepcopy(num_insert)
-                            num_insert = 0
-                            break
-
-                        if rectangle.collidepoint(pos_x, pos_y):
-                            board.highlight_number = "Y"
-                            board.number_clicked = rectangle
-                            num_insert_prev = copy.deepcopy(num_insert)
-                            num_insert = count
-                            keyboard_enter = "n"
-
-                            # Update the Check_mistake function
-                            sudoku.check_mistakes(new_square_flag, notes_flag, 2, num_insert, pos_selected)
-
-                            break
-
-                    else:
-                        continue
-
-                    break
-
-            # Allowing user to input number on keyboard - check for event based on keydown
-            if event.type == pygame.KEYDOWN:
-
-                for num in range(1, 10):
-                    event_check = "K_" + str(num)
-
-                    call = getattr(pygame, event_check)
-                    if event.key == call and board.highlight_number == "N" and board.highlight == "Y":
-                        num_insert_prev = copy.deepcopy(num_insert)
-                        num_insert = num
-                        keyboard_enter = "y"
-
-                        # Update the Check_mistake function
-                        sudoku.check_mistakes(new_square_flag, notes_flag, 3, num_insert, pos_selected)
+                        else:
+                            continue
 
                         break
+
+                    # Check for mouse click on number selection grid
+                    count = 0
+                    for down in range(top_limit, bottom_limit, nblock_size + NUMBERS_GAP):
+                        for across in range(left_limit, right_limit, nblock_size + NUMBERS_GAP):
+                            rectangle = pygame.Rect(across, down, nblock_size, nblock_size)
+                            count += 1
+
+                            if board.highlight_number == "Y" and board.number_clicked == rectangle and rectangle.collidepoint(pos_x, pos_y):
+                                board.highlight_number = "N"
+                                num_insert_prev = copy.deepcopy(num_insert)
+                                num_insert = 0
+                                break
+
+                            if rectangle.collidepoint(pos_x, pos_y):
+                                board.highlight_number = "Y"
+                                board.number_clicked = rectangle
+                                num_insert_prev = copy.deepcopy(num_insert)
+                                num_insert = count
+                                keyboard_enter = "n"
+
+                                # Update the Check_mistake function
+                                sudoku.check_mistakes(new_square_flag, notes_flag, 2, num_insert, pos_selected)
+
+                                break
+
+                        else:
+                            continue
+
+                        break
+
+                # Allowing user to input number on keyboard - check for event based on keydown
+                if event.type == pygame.KEYDOWN:
+
+                    for num in range(1, 10):
+                        event_check = "K_" + str(num)
+
+                        call = getattr(pygame, event_check)
+                        if event.key == call and board.highlight_number == "N" and board.highlight == "Y":
+                            num_insert_prev = copy.deepcopy(num_insert)
+                            num_insert = num
+                            keyboard_enter = "y"
+
+                            # Update the Check_mistake function
+                            sudoku.check_mistakes(new_square_flag, notes_flag, 3, num_insert, pos_selected)
+
+                            break
 
         # Check for click of start button & Change button Text/Color
         if start_button.event == "y":
@@ -777,6 +759,10 @@ def main():
                 sudoku.get_puzzle_web(get_puzzle)
                 start_time = set_start_time()
                 time_flag = "y"
+                win_flag = "n"
+
+                # Update for mistakes
+                sudoku.check_mistakes(new_square_flag, notes_flag, 1, num_insert, pos_selected)
 
             else:
                 first_button_text = "New Sudoku"
