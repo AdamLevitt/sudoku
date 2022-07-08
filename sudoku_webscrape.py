@@ -43,11 +43,11 @@ def format(array):
 
 
 def main():
-    # response = request_sudoku()
+    response = request_sudoku()
 
-    # # Store response in file using context manager
-    # with open("web_response.html", "w") as file:
-    #     file.write(response)
+    # Store response in file using context manager
+    with open("web_response.html", "w") as file:
+        file.write(response)
 
     # Open file in context manager
     with open("web_response.html", "r") as file:
