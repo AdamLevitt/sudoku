@@ -403,6 +403,7 @@ class sudoku_handle:
         """Get Puzzle from site and format accordingly"""
 
         self.get_new = get_new
+        self.mistakes = 0
 
         if self.get_new == "y":
             # Get raw HTML data
